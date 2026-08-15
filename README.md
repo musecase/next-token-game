@@ -9,6 +9,7 @@ An interactive game about what it feels like to be a language model: answer a qu
 - A small Qwen3 0.6B model runs locally in the browser and generates the token cloud.
 - A stronger OpenAI model prepares a concise reference answer and fact packet for custom questions.
 - Replays reuse the original reference answer, so the local paths can diverge without another cloud call.
+- Daily Steer asks players to reach a target token in as few choices as possible, with retries and playable past puzzles.
 - The OpenAI API key stays on the server and is never sent to the browser.
 
 The first real-model round downloads about 570 MB and requires a browser with WebGPU. A no-download curated round is also included.

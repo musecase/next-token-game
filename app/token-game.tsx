@@ -1,6 +1,7 @@
 "use client";
 
 import { CSSProperties, useEffect, useMemo, useState } from "react";
+import DailySteer from "./daily-steer";
 import LocalModelLab from "./local-model-lab";
 
 type Lane = "fact" | "plausible" | "drift";
@@ -375,7 +376,7 @@ type PreparedRound = {
   factPacket: string[];
 };
 
-type Mode = "intro" | "preparing" | "prepareError" | "playing" | "result" | "local";
+type Mode = "intro" | "preparing" | "prepareError" | "playing" | "result" | "local" | "steer";
 
 function getChoices(step: number, drift: number) {
   const base = ROUND[step] ?? [];
@@ -540,7 +541,7 @@ export default function TokenGame() {
           <span>NEXT TOKEN</span>
         </a>
         <div className="prototype-badge">
-          <span className="status-dot" /> PROTOTYPE ROUND
+          <span className="status-dot" /> {mode === "steer" ? "DAILY STEER · PILOT" : "PROTOTYPE ROUND"}
         </div>
       </header>
 
@@ -579,6 +580,9 @@ export default function TokenGame() {
                 : "One small cloud call prepares the facts · every token choice runs on your device"}
             </p>
             <div className="intro-alternatives">
+              <button className="lab-button daily-steer-button" onClick={() => setMode("steer")}>
+                PLAY DAILY STEER <span>NEW</span>
+              </button>
               <button className="lab-button" onClick={openReadyMadeLocalRound}>
                 TRY A READY-MADE LOCAL ROUND <span>REAL MODEL</span>
               </button>
@@ -623,6 +627,8 @@ export default function TokenGame() {
             onExit={() => setMode("intro")}
           />
         )}
+
+        {mode === "steer" && <DailySteer onExit={() => setMode("intro")} />}
 
         {mode === "playing" && (
           <div className="play-panel">
