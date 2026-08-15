@@ -73,10 +73,10 @@ export const DAILY_PUZZLES: DailyPuzzle[] = [
     difficulty: "devious",
   },
   {
-    id: "cats-kitten",
+    id: "cats-kittens",
     date: "2026-08-15",
     question: "Why do cats purr?",
-    target: "kitten",
+    target: "kittens",
     difficulty: "devious",
   },
 ];
