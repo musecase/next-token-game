@@ -31,7 +31,7 @@ The `.gitignore` prevents `.env.local` and its API key from being committed.
 
 Import this repository into Vercel, then add `OPENAI_API_KEY` as a sensitive environment variable for Production and Preview. The standard `npm run build` command produces the deployment.
 
-To enable the Daily Steer scoreboards, add an Upstash Redis integration through the Vercel Marketplace. It supplies `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`; without them, the game works normally and displays the leaderboard as not yet connected.
+To enable the Daily Steer scoreboards, add an Upstash Redis integration through the Vercel Marketplace. The app accepts either `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` or Vercel's compatible `KV_REST_API_URL` / `KV_REST_API_TOKEN`; without them, the game works normally and displays the leaderboard as not yet connected.
 
 ## Current status
 
