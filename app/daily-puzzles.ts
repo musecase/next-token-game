@@ -6,6 +6,11 @@ export type DailyPuzzle = {
   difficulty: "gentle" | "tricky" | "devious";
 };
 
+export type DailyPuzzleSet = {
+  date: string;
+  puzzleIds: [string, string, string];
+};
+
 // Pilot set. These stay deliberately small until real-device play establishes
 // what "reachable but not obvious" means for the frozen local model.
 export const DAILY_PUZZLES: DailyPuzzle[] = [
@@ -214,7 +219,39 @@ export const DAILY_PUZZLES: DailyPuzzle[] = [
   },
 ];
 
+// Three deliberately mixed puzzles per day. During the pilot every puzzle also
+// remains available in the puzzle bank, so difficult candidates can be tested
+// without becoming a locked door.
+export const DAILY_PUZZLE_SETS: DailyPuzzleSet[] = [
+  { date: "2026-08-15", puzzleIds: ["popcorn-water", "bees-dance", "cats-engine"] },
+  { date: "2026-08-16", puzzleIds: ["leaves-winter", "sky-ocean", "william-sea"] },
+  { date: "2026-08-17", puzzleIds: ["tides-sun", "tails-fear", "migration-moon"] },
+  { date: "2026-08-18", puzzleIds: ["bread-gas", "airplanes-feathers", "spiders-music"] },
+  { date: "2026-08-19", puzzleIds: ["magnets-compass", "onions-goggles", "rust-blood"] },
+  { date: "2026-08-20", puzzleIds: ["geckos-hair", "chameleons-mood", "craters-scars"] },
+  { date: "2026-08-21", puzzleIds: ["ducks-oil", "sunscreen-mirror", "helium-guitar"] },
+  { date: "2026-08-22", puzzleIds: ["thermos-space", "snow-rainbow", "ants-perfume"] },
+  { date: "2026-08-23", puzzleIds: ["seawater-rocks", "glowsticks-cold", "velcro-plant"] },
+];
+
+const PUZZLES_BY_ID = new Map(DAILY_PUZZLES.map((puzzle) => [puzzle.id, puzzle]));
+
+export function puzzleSetForDate(date: string) {
+  const unlocked = DAILY_PUZZLE_SETS.filter((set) => set.date <= date);
+  const set = unlocked.find((candidate) => candidate.date === date)
+    ?? unlocked.at(-1)
+    ?? DAILY_PUZZLE_SETS[0];
+
+  return {
+    date: set.date,
+    puzzles: set.puzzleIds.map((id) => PUZZLES_BY_ID.get(id)).filter((puzzle): puzzle is DailyPuzzle => Boolean(puzzle)),
+  };
+}
+
+export function isPuzzleInDailySet(date: string, puzzleId: string) {
+  return DAILY_PUZZLE_SETS.some((set) => set.date === date && set.puzzleIds.includes(puzzleId));
+}
+
 export function puzzleForDate(date: string) {
-  const unlocked = DAILY_PUZZLES.filter((puzzle) => puzzle.date <= date);
-  return unlocked.find((puzzle) => puzzle.date === date) ?? unlocked.at(-1) ?? DAILY_PUZZLES[0];
+  return puzzleSetForDate(date).puzzles[0] ?? DAILY_PUZZLES[0];
 }

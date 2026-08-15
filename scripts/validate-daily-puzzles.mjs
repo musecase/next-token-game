@@ -17,6 +17,19 @@ const duplicateDate = duplicate(puzzles.map((puzzle) => puzzle.date));
 if (duplicateId) throw new Error(`Duplicate puzzle id: ${duplicateId}`);
 if (duplicateDate) throw new Error(`Duplicate puzzle date: ${duplicateDate}`);
 
+const knownIds = new Set(puzzles.map((puzzle) => puzzle.id));
+const sets = [...source.matchAll(/\{ date: "([^"]+)", puzzleIds: \[([^\]]+)] }/g)]
+  .map(([, date, ids]) => ({ date, ids: [...ids.matchAll(/"([^"]+)"/g)].map((match) => match[1]) }));
+
+if (sets.length === 0) throw new Error("No Daily Three sets were found.");
+if (duplicate(sets.map((set) => set.date))) throw new Error("Duplicate Daily Three date.");
+for (const set of sets) {
+  if (set.ids.length !== 3) throw new Error(`Daily set ${set.date} does not contain exactly three puzzles.`);
+  for (const id of set.ids) {
+    if (!knownIds.has(id)) throw new Error(`Daily set ${set.date} references unknown puzzle ${id}.`);
+  }
+}
+
 const tokenizer = await AutoTokenizer.from_pretrained(modelId);
 let failures = 0;
 
@@ -32,4 +45,4 @@ for (const puzzle of puzzles) {
 }
 
 if (failures > 0) process.exitCode = 1;
-else console.log(`Validated ${puzzles.length} Daily Steer targets as exact single tokens.`);
+else console.log(`Validated ${puzzles.length} targets and ${sets.length} Daily Three sets.`);

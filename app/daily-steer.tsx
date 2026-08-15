@@ -1,7 +1,8 @@
 "use client";
 
 import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
-import { DAILY_PUZZLES, DailyPuzzle, puzzleForDate } from "./daily-puzzles";
+import ArcadeLeaderboard from "./arcade-leaderboard";
+import { DAILY_PUZZLES, DailyPuzzle, puzzleSetForDate } from "./daily-puzzles";
 
 type LocalChoice = {
   id: number;
@@ -51,6 +52,16 @@ function displayDate(date: string) {
   }).format(new Date(`${date}T12:00:00Z`));
 }
 
+function readDailyWins(date: string) {
+  try {
+    const saved = window.localStorage.getItem(`next-token-steer-day:${date}`);
+    const parsed = saved ? JSON.parse(saved) : [];
+    return Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
 export default function DailySteer({ onExit }: Props) {
   const workerRef = useRef<Worker | null>(null);
   const [phase, setPhase] = useState<Phase>("menu");
@@ -66,21 +77,28 @@ export default function DailySteer({ onExit }: Props) {
   const [attempts, setAttempts] = useState(0);
   const [best, setBest] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [activeBoardDate, setActiveBoardDate] = useState<string | null>(null);
+  const [dailyWins, setDailyWins] = useState<string[]>([]);
 
   const answer = tokens.join("").trim();
   const cloudChoices = useMemo(() => scatterChoices(choices, step), [choices, step]);
+  const dailySet = useMemo(() => (today ? puzzleSetForDate(today) : null), [today]);
   const pilotPuzzles = useMemo(
-    () => (today
-      ? DAILY_PUZZLES.filter((item) => item.id !== puzzleForDate(today).id).reverse()
-      : []),
-    [today],
+    () => {
+      if (!dailySet) return [];
+      const dailyIds = new Set(dailySet.puzzles.map((item) => item.id));
+      return DAILY_PUZZLES.filter((item) => !dailyIds.has(item.id)).reverse();
+    },
+    [dailySet],
   );
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
       const currentDate = new Date().toISOString().slice(0, 10);
+      const currentSet = puzzleSetForDate(currentDate);
       setToday(currentDate);
-      setPuzzle(puzzleForDate(currentDate));
+      setPuzzle(currentSet.puzzles[0] ?? DAILY_PUZZLES[0]);
+      setDailyWins(readDailyWins(currentSet.date));
     }, 0);
     return () => window.clearTimeout(timer);
   }, []);
@@ -92,7 +110,7 @@ export default function DailySteer({ onExit }: Props) {
     };
   }, []);
 
-  function selectPuzzle(nextPuzzle: DailyPuzzle) {
+  function selectPuzzle(nextPuzzle: DailyPuzzle, boardDate: string | null = null) {
     const saved = window.localStorage.getItem(`next-token-steer-best:${nextPuzzle.id}`);
     setPuzzle(nextPuzzle);
     setBest(saved ? Number(saved) : null);
@@ -101,6 +119,7 @@ export default function DailySteer({ onExit }: Props) {
     setTokens([]);
     setChoices([]);
     setStep(0);
+    setActiveBoardDate(boardDate);
   }
 
   function attachWorker() {
@@ -174,6 +193,14 @@ export default function DailySteer({ onExit }: Props) {
         setBest(score);
         window.localStorage.setItem(`next-token-steer-best:${puzzle.id}`, String(score));
       }
+      if (activeBoardDate) {
+        setDailyWins((current) => {
+          if (current.includes(puzzle.id)) return current;
+          const next = [...current, puzzle.id];
+          window.localStorage.setItem(`next-token-steer-day:${activeBoardDate}`, JSON.stringify(next));
+          return next;
+        });
+      }
       setPhase("won");
       return;
     }
@@ -192,24 +219,40 @@ export default function DailySteer({ onExit }: Props) {
   }
 
   if (phase === "menu") {
-    const todayPuzzle = puzzleForDate(today);
+    const todaySet = dailySet ?? puzzleSetForDate(today);
     return (
       <div className="steer-menu">
-        <p className="eyebrow">A daily token puzzle</p>
+        <p className="eyebrow">Three daily token puzzles</p>
         <h1>Steer the model.</h1>
-        <p className="lede">Reach the target in as few token choices as possible. No timer. Bad path? Start over.</p>
+        <p className="lede">Win any one to complete the day. Play all three if the model has offended your honor.</p>
 
-        <article className="steer-daily-card">
-          <div>
-            <span className="card-label">TODAY · {displayDate(todayPuzzle.date)}</span>
-            <h2>{todayPuzzle.question}</h2>
+        <section className="steer-daily-card">
+          <div className="steer-daily-heading">
+            <div>
+              <span className="card-label">TODAY · {displayDate(todaySet.date)}</span>
+              <h2>Daily Three</h2>
+            </div>
+            <div className="steer-daily-progress">
+              <span>{dailyWins.length > 0 ? "DAY COMPLETE" : "WIN ONE TO COMPLETE"}</span>
+              <strong>{dailyWins.length}/3</strong>
+            </div>
           </div>
-          <div className="steer-target-block">
-            <span>TARGET TOKEN</span>
-            <strong>{todayPuzzle.target}</strong>
+          <div className="steer-daily-grid">
+            {todaySet.puzzles.map((item, index) => {
+              const won = dailyWins.includes(item.id);
+              return (
+                <article className={`steer-daily-puzzle ${won ? "steer-daily-puzzle-won" : ""}`} key={item.id}>
+                  <span>PUZZLE {index + 1} · {item.difficulty}</span>
+                  <h3>{item.question}</h3>
+                  <div><small>TARGET</small><strong>{item.target}</strong></div>
+                  <button className="primary-button" onClick={() => selectPuzzle(item, todaySet.date)}>
+                    {won ? "PLAY AGAIN" : "PLAY THIS STEER"} →
+                  </button>
+                </article>
+              );
+            })}
           </div>
-          <button className="primary-button" onClick={() => selectPuzzle(todayPuzzle)}>PLAY TODAY’S STEER →</button>
-        </article>
+        </section>
 
         <div className="steer-archive-heading">
           <span>PILOT PUZZLES</span>
@@ -218,7 +261,7 @@ export default function DailySteer({ onExit }: Props) {
         <div className="steer-archive-grid">
           {pilotPuzzles.map((item) => (
             <button key={item.id} className="steer-archive-card" onClick={() => selectPuzzle(item)}>
-              <span>{displayDate(item.date)} · {item.difficulty}</span>
+              <span>{item.difficulty}</span>
               <strong>{item.question}</strong>
               <small>target: {item.target}</small>
             </button>
@@ -232,7 +275,7 @@ export default function DailySteer({ onExit }: Props) {
   if (phase === "permission") {
     return (
       <div className="local-permission steer-permission">
-        <p className="eyebrow">Daily Steer · {displayDate(puzzle.date)}</p>
+        <p className="eyebrow">{activeBoardDate ? `Daily Three · ${displayDate(activeBoardDate)}` : "Pilot Puzzle"}</p>
         <h1>Find a path.</h1>
         <p className="lede">The model begins by answering the question. Your choices bend what becomes likely next.</p>
         <div className="steer-brief">
@@ -293,11 +336,12 @@ export default function DailySteer({ onExit }: Props) {
           <div className="answer-card-heading"><span>YOUR PATH</span><span className="answer-chip">ATTEMPT {attempts}</span></div>
           <p>{answer}</p>
         </article>
+        {activeBoardDate ? <ArcadeLeaderboard date={activeBoardDate} puzzleId={puzzle.id} score={score} /> : null}
         <div className="result-actions">
           <button className="primary-button" onClick={() => loadPuzzle(true)}>TRY A SHORTER PATH</button>
           <button className="text-button" onClick={() => setPhase("menu")}>BACK TO THE ARCHIVE</button>
         </div>
-        <p className="tiny-note">Leaderboard comes after we learn which puzzles are actually fair.</p>
+        <p className="tiny-note">Arcade scores are casual. A sufficiently determined raccoon can cheat.</p>
       </div>
     );
   }
@@ -305,7 +349,7 @@ export default function DailySteer({ onExit }: Props) {
   return (
     <div className="play-panel local-play steer-play">
       <div className="steer-play-heading">
-        <div><span className="card-label">DAILY STEER · {displayDate(puzzle.date)}</span><h2>{puzzle.question}</h2></div>
+        <div><span className="card-label">DAILY STEER · {displayDate(activeBoardDate ?? puzzle.date)}</span><h2>{puzzle.question}</h2></div>
         <div className="steer-target-live"><span>TARGET</span><strong>{puzzle.target}</strong></div>
       </div>
       <div className="answer-stream" aria-live="polite">
