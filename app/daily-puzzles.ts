@@ -212,13 +212,6 @@ export const DAILY_PUZZLES: DailyPuzzle[] = [
     target: "romance",
     difficulty: "devious",
   },
-  {
-    id: "octopus-pixels",
-    date: "2026-09-04",
-    question: "How do octopuses change color?",
-    target: "pixels",
-    difficulty: "devious",
-  },
 ];
 
 export function puzzleForDate(date: string) {
