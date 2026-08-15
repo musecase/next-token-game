@@ -9,7 +9,8 @@ An interactive game about what it feels like to be a language model: answer a qu
 - A small Qwen3 0.6B model runs locally in the browser and generates the token cloud.
 - A stronger OpenAI model prepares a concise reference answer and fact packet for custom questions.
 - Replays reuse the original reference answer, so the local paths can diverge without another cloud call.
-- Daily Steer offers three target-token puzzles each day. Winning one completes the day; each puzzle keeps its own best score.
+- Daily Steer offers three target-token puzzles each day from a prebuilt 365-day bank. Winning one completes the day; each puzzle keeps its own best score.
+- Past days can be reopened from the date archive. After day 365, the bank cycles with fresh date-specific scoreboards.
 - Optional arcade-style top-10 boards use anonymous browser IDs and filtered 10-character names.
 - The OpenAI API key stays on the server and is never sent to the browser.
 

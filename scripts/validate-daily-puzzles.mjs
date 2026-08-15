@@ -2,30 +2,29 @@ import fs from "node:fs";
 import { AutoTokenizer } from "@huggingface/transformers";
 
 const modelId = "onnx-community/Qwen3-0.6B-ONNX";
-const source = fs.readFileSync(new URL("../app/daily-puzzles.ts", import.meta.url), "utf8");
-const puzzles = [...source.matchAll(/id: "([^"]+)"[\s\S]*?date: "([^"]+)"[\s\S]*?target: "([^"]+)"/g)]
-  .map(([, id, date, target]) => ({ id, date, target }));
+const source = fs.readFileSync(new URL("../app/daily-puzzles.generated.ts", import.meta.url), "utf8");
 
-if (puzzles.length === 0) {
-  throw new Error("No Daily Steer puzzles were found.");
+function readExport(name) {
+  const match = source.match(new RegExp(`export const ${name} = ([\\s\\S]*?) as const;`));
+  if (!match) throw new Error(`Could not find ${name}.`);
+  return JSON.parse(match[1]);
 }
 
-const duplicate = (values) => values.find((value, index) => values.indexOf(value) !== index);
-const duplicateId = duplicate(puzzles.map((puzzle) => puzzle.id));
-const duplicateDate = duplicate(puzzles.map((puzzle) => puzzle.date));
+const puzzles = readExport("GENERATED_DAILY_PUZZLES");
+const sets = readExport("GENERATED_DAILY_SETS");
+if (puzzles.length !== 1095) throw new Error(`Expected 1095 puzzles, found ${puzzles.length}.`);
+if (sets.length !== 365) throw new Error(`Expected 365 Daily Three sets, found ${sets.length}.`);
 
-if (duplicateId) throw new Error(`Duplicate puzzle id: ${duplicateId}`);
-if (duplicateDate) throw new Error(`Duplicate puzzle date: ${duplicateDate}`);
-
+const ids = new Set();
 const knownIds = new Set(puzzles.map((puzzle) => puzzle.id));
-const sets = [...source.matchAll(/\{ date: "([^"]+)", puzzleIds: \[([^\]]+)] }/g)]
-  .map(([, date, ids]) => ({ date, ids: [...ids.matchAll(/"([^"]+)"/g)].map((match) => match[1]) }));
+for (const puzzle of puzzles) {
+  if (ids.has(puzzle.id)) throw new Error(`Duplicate puzzle id: ${puzzle.id}`);
+  ids.add(puzzle.id);
+}
 
-if (sets.length === 0) throw new Error("No Daily Three sets were found.");
-if (duplicate(sets.map((set) => set.date))) throw new Error("Duplicate Daily Three date.");
 for (const set of sets) {
-  if (set.ids.length !== 3) throw new Error(`Daily set ${set.date} does not contain exactly three puzzles.`);
-  for (const id of set.ids) {
+  if (set.puzzleIds.length !== 3) throw new Error(`Daily set ${set.date} does not contain exactly three puzzles.`);
+  for (const id of set.puzzleIds) {
     if (!knownIds.has(id)) throw new Error(`Daily set ${set.date} references unknown puzzle ${id}.`);
   }
 }

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import { isPuzzleInDailySet } from "../../daily-puzzles";
+import { DAILY_START_DATE, isPuzzleInDailySet } from "../../daily-puzzles";
 import { cleanArcadeName, validPlayerId } from "../../leaderboard-guard";
 
 type Entry = {
@@ -60,7 +60,15 @@ async function getEntries(client: Redis, date: string, puzzleId: string): Promis
 }
 
 function validBoard(date: string | null, puzzleId: string | null) {
-  return Boolean(date && puzzleId && /^\d{4}-\d{2}-\d{2}$/.test(date) && isPuzzleInDailySet(date, puzzleId));
+  const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+  return Boolean(
+    date
+    && puzzleId
+    && /^\d{4}-\d{2}-\d{2}$/.test(date)
+    && date >= DAILY_START_DATE
+    && date <= tomorrow
+    && isPuzzleInDailySet(date, puzzleId),
+  );
 }
 
 export async function GET(request: Request) {

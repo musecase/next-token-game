@@ -11,6 +11,7 @@
     "build": "next build",
     "start": "next start",
     "test": "npm run build",
+    "build:puzzle-bank": "node scripts/build-daily-puzzle-bank.mjs",
     "validate:puzzles": "node scripts/validate-daily-puzzles.mjs",
     "dev:sites": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
     "build:sites": "bash scripts/build-verified.sh",
