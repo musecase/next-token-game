@@ -69,8 +69,10 @@ export default function DailySteer({ onExit }: Props) {
 
   const answer = tokens.join("").trim();
   const cloudChoices = useMemo(() => scatterChoices(choices, step), [choices, step]);
-  const unlockedPuzzles = useMemo(
-    () => (today ? DAILY_PUZZLES.filter((item) => item.date < today).reverse() : []),
+  const pilotPuzzles = useMemo(
+    () => (today
+      ? DAILY_PUZZLES.filter((item) => item.id !== puzzleForDate(today).id).reverse()
+      : []),
     [today],
   );
 
@@ -210,11 +212,11 @@ export default function DailySteer({ onExit }: Props) {
         </article>
 
         <div className="steer-archive-heading">
-          <span>PAST PUZZLES</span>
-          <span>{unlockedPuzzles.length} AVAILABLE</span>
+          <span>PILOT PUZZLES</span>
+          <span>{pilotPuzzles.length} AVAILABLE</span>
         </div>
         <div className="steer-archive-grid">
-          {unlockedPuzzles.map((item) => (
+          {pilotPuzzles.map((item) => (
             <button key={item.id} className="steer-archive-card" onClick={() => selectPuzzle(item)}>
               <span>{displayDate(item.date)} · {item.difficulty}</span>
               <strong>{item.question}</strong>
