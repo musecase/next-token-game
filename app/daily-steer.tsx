@@ -341,7 +341,6 @@ export default function DailySteer({ onExit }: Props) {
           <button className="primary-button" onClick={() => loadPuzzle(true)}>TRY A SHORTER PATH</button>
           <button className="text-button" onClick={() => setPhase("menu")}>BACK TO THE ARCHIVE</button>
         </div>
-        <p className="tiny-note">Arcade scores are casual. A sufficiently determined raccoon can cheat.</p>
       </div>
     );
   }
