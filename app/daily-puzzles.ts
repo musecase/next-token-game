@@ -213,10 +213,10 @@ export const DAILY_PUZZLES: DailyPuzzle[] = [
     difficulty: "devious",
   },
   {
-    id: "octopus-television",
+    id: "octopus-pixels",
     date: "2026-09-04",
     question: "How do octopuses change color?",
-    target: "television",
+    target: "pixels",
     difficulty: "devious",
   },
 ];
