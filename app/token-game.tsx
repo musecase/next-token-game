@@ -565,21 +565,25 @@ export default function TokenGame() {
                   <span className="title-word">Token</span>
                   <span className="ascii-separator" aria-hidden="true">_</span>
                   <span className="title-word title-word-accent">Tumble</span>
+                  <span className="ascii-art" aria-hidden="true">
+                    <span className="ascii-word ascii-token">{`▀█▀ █▀█ █▄▀ █▀▀ █▄░█\n░█░ █▄█ █░█ ██▄ █░▀█`}</span>
+                    <span className="ascii-word ascii-tumble">{`▀█▀ █░█ █▀▄▀█ █▀▄ █░░ █▀▀\n░█░ █▄█ █░▀░█ █▄▀ █▄▄ ██▄`}</span>
+                  </span>
                   <span className="ascii-cap" aria-hidden="true">└──────────────────────────┘</span>
                 </h1>
                 <p className="lede">
                   <strong>You are the model.</strong> Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
                 </p>
-                <dl className="intro-readout" aria-label="Game conditions">
-                  <div><dt>input</dt><dd>one question</dd></div>
-                  <div><dt>output</dt><dd>locally plausible</dd></div>
-                  <div><dt>operator</dt><dd>you, unfortunately</dd></div>
-                </dl>
+                <button className="daily-launch" type="button" onClick={() => setMode("steer")}>
+                  <span className="daily-launch-kicker">[ daily_challenge ]</span>
+                  <strong>PLAY DAILY STEER <span aria-hidden="true">→</span></strong>
+                  <small>Three puzzles · unlimited retries · today’s leaderboard</small>
+                </button>
               </div>
 
               <div className="input-console">
                 <div className="console-header">
-                  <span>INPUT PORT / QUESTION</span>
+                  <span>SIMULATOR / INPUT PORT</span>
                   <span><i aria-hidden="true" /> READY</span>
                 </div>
                 <form className="question-card question-form" onSubmit={prepareCustomRound}>
@@ -603,13 +607,10 @@ export default function TokenGame() {
 
                 <p className="tiny-note">
                   {customQuestions === "off"
-                    ? "Custom input is offline until the server key is connected. The three switches below work now."
+                    ? "Custom input is offline until the server key is connected. The simulator options below work now."
                     : "Facts prepared in the cloud · token choices run on your device"}
                 </p>
                 <div className="intro-alternatives">
-                  <button className="lab-button daily-steer-button" onClick={() => setMode("steer")}>
-                    DAILY STEER <span>NEW</span>
-                  </button>
                   <button className="lab-button" onClick={openReadyMadeLocalRound}>
                     LOCAL MODEL <span>570 MB</span>
                   </button>
@@ -618,6 +619,12 @@ export default function TokenGame() {
                   </button>
                 </div>
               </div>
+
+              <dl className="intro-readout" aria-label="Game conditions">
+                <div><dt>input</dt><dd>one question</dd></div>
+                <div><dt>output</dt><dd>locally plausible</dd></div>
+                <div><dt>operator</dt><dd>you, unfortunately</dd></div>
+              </dl>
             </div>
           </div>
         )}
