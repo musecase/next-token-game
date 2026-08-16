@@ -30,7 +30,7 @@ button { font: inherit; }
 .game-shell {
   min-height: 100svh;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   overflow: hidden;
   background:
     linear-gradient(rgba(20, 19, 15, 0.045) 1px, transparent 1px),
@@ -173,6 +173,12 @@ h1, h2, p { margin-top: 0; }
   letter-spacing: -0.07em;
 }
 
+.game-title .ascii-cap,
+.game-title .ascii-separator { display: none; }
+.game-title .title-word { display: block; margin-left: 0; }
+.game-title .title-word-accent { margin-left: .28em; }
+.intro-copy .lede strong { color: var(--ink); }
+
 .result-panel h1 { font-size: clamp(46px, 7vw, 82px); }
 
 .lede {
@@ -214,7 +220,7 @@ h1, h2, p { margin-top: 0; }
   box-shadow: 10px 10px 0 var(--ink);
 }
 .input-console::after {
-  content: "NT-01";
+  content: "TT-01";
   position: absolute;
   right: 10px;
   bottom: -25px;
@@ -721,11 +727,9 @@ h1, h2, p { margin-top: 0; }
   color: var(--ink);
   font-family: var(--font-mono);
   background:
-    linear-gradient(rgba(85,255,255,.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(85,255,255,.035) 1px, transparent 1px),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at 50% 38%, rgba(85,255,255,.045), transparent 66%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, rgba(0,0,0,.045) 1px 3px),
     var(--paper);
-  background-size: 24px 24px, 24px 24px, auto, auto;
 }
 
 .skin-cli .topbar {
@@ -796,13 +800,37 @@ h1, h2, p { margin-top: 0; }
   letter-spacing: -.075em;
   text-transform: uppercase;
 }
-.skin-cli .intro-panel h1 { font-size: clamp(54px, 7vw, 92px); }
-.skin-cli .intro-panel h1 span {
-  margin-left: .16em;
+.skin-cli .intro-panel .game-title {
+  width: min-content;
+  margin: 14px 0 24px;
+  font-size: clamp(54px, 7vw, 88px);
+  line-height: .82;
+  letter-spacing: -.075em;
+}
+.skin-cli .game-title .ascii-cap {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  color: #00aaaa;
+  font-size: clamp(9px, 1.25vw, 14px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0;
+  white-space: nowrap;
+  -webkit-text-stroke: 0;
+}
+.skin-cli .game-title .title-word {
+  display: block;
+  margin: 0;
+  color: #ffffff;
+  -webkit-text-stroke: 0;
+}
+.skin-cli .game-title .title-word-accent {
   color: #55ffff;
   -webkit-text-stroke: 0;
 }
 .skin-cli .lede { color: #aaaaaa; }
+.skin-cli .intro-copy .lede strong { color: #ffff55; }
 .skin-cli .intro-readout { border-color: #55ffff; }
 .skin-cli .intro-readout > div { border-color: rgba(85,255,255,.32); }
 .skin-cli .intro-readout dt { color: #55ffff; }
@@ -813,7 +841,7 @@ h1, h2, p { margin-top: 0; }
   background: #071426;
   box-shadow: none;
 }
-.skin-cli .input-console::after { content: "/dev/next-token :: tty01"; color: #55ffff; }
+.skin-cli .input-console::after { content: "/dev/token-tumble :: tty01"; color: #55ffff; }
 .skin-cli .console-header { border-color: #55ffff; background: #0000aa; }
 .skin-cli .console-header span:last-child { color: #55ff55; }
 .skin-cli .console-header i { background: #55ff55; box-shadow: 0 0 8px #55ff55; }
@@ -909,9 +937,6 @@ h1, h2, p { margin-top: 0; }
 .skin-cli .arcade-board { border-color: #55ffff; border-radius: 0; background: #000000; box-shadow: 4px 4px 0 #0000aa; }
 .skin-cli .arcade-name-form input { border-color: #55ffff; border-radius: 0; background: #071426; }
 .skin-cli .arcade-name-form button { border-radius: 0; background: #55ffff; }
-.skin-cli footer { border-color: #55ffff; background: #0000aa; color: #aaaaaa; }
-
-footer { min-height: 56px; padding: 14px clamp(20px, 4vw, 56px); display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); font-family: var(--font-geist-mono), monospace; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: rgba(20,19,15,.58); }
 
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes cloud-in { from { opacity: 0; filter: blur(2px); } }
@@ -970,8 +995,6 @@ footer { min-height: 56px; padding: 14px clamp(20px, 4vw, 56px); display: flex; 
   .steer-scoreline { grid-template-columns: 1fr; }
   .arcade-name-form > div { grid-template-columns: 1fr; }
   .arcade-name-form button { min-height: 42px; }
-  footer { justify-content: center; text-align: center; }
-  footer span:last-child { display: none; }
 }
 
 @media (max-width: 430px) {

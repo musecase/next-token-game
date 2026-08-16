@@ -538,9 +538,9 @@ export default function TokenGame() {
   return (
     <main className={`game-shell skin-${skin}`}>
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="Next Token home">
-          <span className="brand-mark">N</span>
-          <span>NEXT TOKEN</span>
+        <a className="brand" href="#top" aria-label="Token Tumble home">
+          <span className="brand-mark">T</span>
+          <span>TOKEN TUMBLE</span>
         </a>
         <div className="topbar-tools">
           <div className="skin-switcher" aria-label="Preview visual style">
@@ -560,9 +560,15 @@ export default function TokenGame() {
             <div className="intro-layout">
               <div className="intro-copy">
                 <p className="eyebrow"><span aria-hidden="true">&gt;_</span> Human inference emulator</p>
-                <h1>You are<br /><span>the model.</span></h1>
+                <h1 className="game-title" aria-label="Token Tumble">
+                  <span className="ascii-cap" aria-hidden="true">┌─[ token_tumble.exe ]─────┐</span>
+                  <span className="title-word">Token</span>
+                  <span className="ascii-separator" aria-hidden="true">_</span>
+                  <span className="title-word title-word-accent">Tumble</span>
+                  <span className="ascii-cap" aria-hidden="true">└──────────────────────────┘</span>
+                </h1>
                 <p className="lede">
-                  Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
+                  <strong>You are the model.</strong> Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
                 </p>
                 <dl className="intro-readout" aria-label="Game conditions">
                   <div><dt>input</dt><dd>one question</dd></div>
@@ -772,10 +778,6 @@ export default function TokenGame() {
         )}
       </section>
 
-      <footer>
-        <span>One question. Many locally plausible futures.</span>
-        <span>temperature: human · confidence: suspicious</span>
-      </footer>
     </main>
   );
 }

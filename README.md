@@ -1,4 +1,4 @@
-# Next Token
+# Token Tumble
 
 An interactive game about what it feels like to be a language model: answer a question by choosing one probable next token at a time.
 

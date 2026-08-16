@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Next Token",
+  title: "Token Tumble",
   description: "A fast game about how language models choose what comes next.",
   other: {
     "codex-preview": "development",
