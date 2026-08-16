@@ -442,6 +442,7 @@ export default function TokenGame() {
 
   const choices = useMemo(() => getChoices(step, drift), [step, drift]);
   const cloudChoices = useMemo(() => scatterChoices(choices, step), [choices, step]);
+  const peakProbability = Math.max(choices[0]?.probability ?? 1, Number.EPSILON);
   const answer = tokens.join("").trim();
   const greedyPull = tokens.length ? (greedyPicks / tokens.length) * 100 : 0;
   const driftLevel = Math.min(100, (drift / 6) * 100);
@@ -700,9 +701,10 @@ export default function TokenGame() {
               </div>
               <div className="token-cloud">
                 {cloudChoices.map((choice, index) => {
+                  const relativeProbability = choice.probability / peakProbability;
                   const style = {
-                    "--token-scale": 0.82 + Math.sqrt(choice.probability),
-                    "--token-alpha": 0.52 + choice.probability * 1.2,
+                    "--token-scale": 1 + Math.pow(Math.max(0.02, relativeProbability), 0.58) * 0.48,
+                    "--token-alpha": 0.58 + Math.pow(Math.max(0.02, relativeProbability), 0.65) * 0.42,
                     "--cloud-x": `${CLOUD_X[index]}px`,
                     "--cloud-y": `${CLOUD_Y[index]}px`,
                   } as CSSProperties;

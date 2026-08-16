@@ -257,7 +257,7 @@ export default function DailySteer({ onExit }: Props) {
                 <article className={`steer-daily-puzzle ${won ? "steer-daily-puzzle-won" : ""}`} key={item.id}>
                   <span>PUZZLE {index + 1} · {item.difficulty}</span>
                   <h3>{item.question}</h3>
-                  <div><small>TARGET</small><strong>{item.target}</strong></div>
+                  <div className="steer-card-target"><small>TARGET TOKEN</small><strong>{item.target}</strong></div>
                   <button className="primary-button" onClick={() => selectPuzzle(item, viewDate)}>
                     {won ? "PLAY AGAIN" : "PLAY THIS STEER"} →
                   </button>
@@ -382,8 +382,8 @@ export default function DailySteer({ onExit }: Props) {
           {cloudChoices.map((choice, index) => {
             const isTarget = normalizeToken(choice.display) === normalizeToken(puzzle.target);
             const style = {
-              "--token-scale": 0.82 + Math.sqrt(Math.max(0.025, choice.relative)) * 0.32,
-              "--token-alpha": 0.48 + choice.relative * 0.52,
+              "--token-scale": 1 + Math.pow(Math.max(0.02, choice.relative), 0.58) * 0.48,
+              "--token-alpha": 0.58 + Math.pow(Math.max(0.02, choice.relative), 0.65) * 0.42,
               "--cloud-x": `${CLOUD_X[index]}px`,
               "--cloud-y": `${CLOUD_Y[index]}px`,
             } as CSSProperties;
