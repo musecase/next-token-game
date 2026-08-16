@@ -260,8 +260,8 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
         <div className="token-cloud">
           {cloudChoices.map((choice, index) => {
             const style = {
-              "--token-scale": 1 + Math.pow(Math.max(0.02, choice.relative), 0.58) * 0.48,
-              "--token-alpha": 0.58 + Math.pow(Math.max(0.02, choice.relative), 0.65) * 0.42,
+              "--token-scale": 0.76 + Math.pow(Math.max(0.02, choice.relative), 1.1) * 0.72,
+              "--token-alpha": 0.22 + Math.pow(Math.max(0.02, choice.relative), 1.1) * 0.78,
               "--cloud-x": `${CLOUD_X[index]}px`,
               "--cloud-y": `${CLOUD_Y[index]}px`,
             } as CSSProperties;

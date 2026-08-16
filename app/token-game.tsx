@@ -377,6 +377,37 @@ type PreparedRound = {
   factPacket: string[];
 };
 
+const READY_MADE_ROUNDS: PreparedRound[] = [
+  { question: QUESTION, reference: REFERENCE, factPacket: FACT_PACKET },
+  {
+    question: "Why do cats purr?",
+    reference: "Cats purr in several situations, including comfort, social contact, stress, and pain. The sound comes from rapid, regular movement of tissues around the larynx as the cat breathes, though its exact biological purpose is not fully settled.",
+    factPacket: [
+      "Cats purr when relaxed, but they may also purr when stressed, injured, or seeking contact.",
+      "Purring involves rapid, rhythmic activity around the larynx while air moves during breathing.",
+      "Purring can communicate between cats and with humans; it probably does not have only one purpose.",
+    ],
+  },
+  {
+    question: "Why do glow sticks stay cool?",
+    reference: "Glow sticks use chemiluminescence: a chemical reaction transfers energy into dye molecules, which release that energy as visible light. Very little energy becomes heat, so the stick glows without becoming hot.",
+    factPacket: [
+      "Glow sticks produce light through a chemical reaction called chemiluminescence.",
+      "The reaction excites dye molecules, which release energy as photons of visible light.",
+      "Only a small amount of the reaction's energy becomes heat, so glow sticks remain near ambient temperature.",
+    ],
+  },
+  {
+    question: "How do octopuses change color so quickly?",
+    reference: "Octopuses rapidly expand and contract pigment sacs called chromatophores using muscles controlled by their nervous system. Reflective cells beneath them alter how light is reflected, adding iridescent, pale, and patterned effects.",
+    factPacket: [
+      "Octopus skin contains pigment sacs called chromatophores that can expand or contract.",
+      "The nervous system directly controls muscles around chromatophores, allowing changes within fractions of a second.",
+      "Iridophores and leucophores beneath the chromatophores reflect light and add shimmering or pale effects.",
+    ],
+  },
+];
+
 type Mode = "intro" | "preparing" | "prepareError" | "playing" | "result" | "local" | "steer";
 
 function getChoices(step: number, drift: number) {
@@ -517,8 +548,8 @@ export default function TokenGame() {
     }
   }
 
-  function openReadyMadeLocalRound() {
-    setPreparedRound({ question: QUESTION, reference: REFERENCE, factPacket: FACT_PACKET });
+  function openReadyMadeLocalRound(round: PreparedRound) {
+    setPreparedRound(round);
     setPreparedInCloud(false);
     setMode("local");
   }
@@ -622,9 +653,21 @@ export default function TokenGame() {
                     : "Facts prepared in the cloud · token choices run on your device"}
                 </p>
                 <div className="intro-alternatives">
-                  <button className="lab-button" type="button" onClick={openReadyMadeLocalRound}>
-                    LOCAL MODEL <span>570 MB</span><b className="action-arrow" aria-hidden="true">→</b>
-                  </button>
+                  <section className="local-round-bank" aria-labelledby="local-round-bank-title">
+                    <div className="local-round-bank-header">
+                      <strong id="local-round-bank-title">[ local_model ]</strong>
+                      <span>one 570 MB download · choose a question</span>
+                    </div>
+                    <div className="local-round-options">
+                      {READY_MADE_ROUNDS.map((round, index) => (
+                        <button key={round.question} type="button" onClick={() => openReadyMadeLocalRound(round)}>
+                          <small>{String(index + 1).padStart(2, "0")}</small>
+                          <span>{round.question}</span>
+                          <b aria-hidden="true">→</b>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
                   <button className="lab-button" type="button" onClick={startRound}>
                     INSTANT DEMO <b className="action-arrow" aria-hidden="true">→</b>
                   </button>
@@ -655,7 +698,7 @@ export default function TokenGame() {
             <p className="lede">{prepareError}</p>
             <div className="result-actions">
               <button className="primary-button" onClick={() => setMode("intro")}>TRY ANOTHER QUESTION</button>
-              <button className="text-button" onClick={openReadyMadeLocalRound}>PLAY THE READY-MADE ROUND</button>
+              <button className="text-button" onClick={() => openReadyMadeLocalRound(READY_MADE_ROUNDS[0])}>PLAY THE READY-MADE ROUND</button>
             </div>
           </div>
         )}
@@ -711,8 +754,8 @@ export default function TokenGame() {
                 {cloudChoices.map((choice, index) => {
                   const relativeProbability = choice.probability / peakProbability;
                   const style = {
-                    "--token-scale": 1 + Math.pow(Math.max(0.02, relativeProbability), 0.58) * 0.48,
-                    "--token-alpha": 0.58 + Math.pow(Math.max(0.02, relativeProbability), 0.65) * 0.42,
+                    "--token-scale": 0.76 + Math.pow(Math.max(0.02, relativeProbability), 1.1) * 0.72,
+                    "--token-alpha": 0.22 + Math.pow(Math.max(0.02, relativeProbability), 1.1) * 0.78,
                     "--cloud-x": `${CLOUD_X[index]}px`,
                     "--cloud-y": `${CLOUD_Y[index]}px`,
                   } as CSSProperties;
