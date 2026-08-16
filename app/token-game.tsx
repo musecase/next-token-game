@@ -572,13 +572,13 @@ export default function TokenGame() {
                     <span className="ascii-cap">+----------------------------+</span>
                   </span>
                 </h1>
+                <p className="eyebrow model-role"><span aria-hidden="true">&gt;_</span> You are the model</p>
                 <p className="lede">
-                  <strong>You are the model.</strong> Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
+                  Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
                 </p>
                 <div className="daily-launch">
                   <span className="section-kicker">[ daily_challenge ]</span>
                   <strong>DAILY STEER</strong>
-                  <small>Three puzzles · unlimited retries · today’s leaderboard</small>
                   <button className="primary-button daily-launch-button" type="button" onClick={() => setMode("steer")}>
                     PLAY TODAY’S THREE <span aria-hidden="true">→</span>
                   </button>
@@ -591,20 +591,27 @@ export default function TokenGame() {
                   <span><i aria-hidden="true" /> [ ready ]</span>
                 </div>
                 <form className="question-card question-form" onSubmit={prepareCustomRound}>
-                  <label className="card-label" htmlFor="custom-question">TYPE ANY QUESTION</label>
-                  <textarea
-                    id="custom-question"
-                    value={questionDraft}
-                    onChange={(event) => setQuestionDraft(event.target.value)}
-                    maxLength={220}
-                    rows={3}
-                    placeholder="Why do we dream?"
-                  />
+                  <label className="prompt-role" htmlFor="custom-question">user:</label>
+                  <div className="prompt-entry">
+                    <span aria-hidden="true">&gt;</span>
+                    <textarea
+                      id="custom-question"
+                      value={questionDraft}
+                      onChange={(event) => setQuestionDraft(event.target.value)}
+                      maxLength={220}
+                      rows={3}
+                      placeholder="Why do we dream?"
+                    />
+                  </div>
                   <div className="question-form-footer">
                     <span>{questionDraft.length}/220 chars</span>
-                    <button className="primary-button" type="submit" disabled={customQuestions !== "ready"}>
-                      {customQuestions === "ready" ? "PREPARE THIS ROUND" : customQuestions === "checking" ? "CHECKING THE SWITCH…" : "CUSTOM ROUND NEEDS KEY"}
-                      {customQuestions === "ready" && <span aria-hidden="true"> →</span>}
+                    <button
+                      aria-label={customQuestions === "ready" ? "Start the assistant response" : undefined}
+                      className="primary-button"
+                      type="submit"
+                      disabled={customQuestions !== "ready"}
+                    >
+                      {customQuestions === "ready" ? "assistant:" : customQuestions === "checking" ? "assistant: checking…" : "assistant: unavailable"}
                     </button>
                   </div>
                 </form>
@@ -624,11 +631,6 @@ export default function TokenGame() {
                 </div>
               </div>
 
-              <dl className="intro-readout" aria-label="Game conditions">
-                <div><dt>input</dt><dd>one question</dd></div>
-                <div><dt>output</dt><dd>locally plausible</dd></div>
-                <div><dt>operator</dt><dd>you, unfortunately</dd></div>
-              </dl>
             </div>
           </div>
         )}
