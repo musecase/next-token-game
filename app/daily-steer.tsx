@@ -369,12 +369,15 @@ export default function DailySteer({ onExit }: Props) {
   return (
     <div className="play-panel local-play steer-play">
       <div className="steer-play-heading">
-        <div><span className="card-label">DAILY STEER · {displayDate(activeBoardDate ?? puzzle.date)}</span><h2>{puzzle.question}</h2></div>
+        <div><span className="prompt-role">user:</span><h2>{puzzle.question}</h2></div>
         <div className="steer-target-live"><span>TARGET</span><strong>{puzzle.target}</strong></div>
       </div>
-      <div className="answer-stream" aria-live="polite">
-        {answer || <span className="cursor-copy">The path starts here</span>}
-        <span className="cursor" aria-hidden="true" />
+      <div className="response-block">
+        <span className="prompt-role assistant-role">assistant:</span>
+        <div className="answer-stream" aria-live="polite">
+          {answer || <span className="cursor-copy">The path starts here</span>}
+          <span className="cursor" aria-hidden="true" />
+        </div>
       </div>
       <div className={`token-zone ${busy ? "token-zone-busy" : ""}`}>
         <div className="zone-heading"><span>{busy ? "CALCULATING THE NEXT CLOUD…" : "STEER TOWARD THE TARGET"}</span><span>{tokens.length} TOKENS</span></div>

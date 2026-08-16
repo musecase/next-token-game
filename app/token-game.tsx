@@ -676,7 +676,7 @@ export default function TokenGame() {
           <div className="play-panel">
             <div className="play-heading">
               <div>
-                <span className="card-label">QUESTION</span>
+                <span className="prompt-role">user:</span>
                 <h2>{QUESTION}</h2>
               </div>
               <div className="play-controls">
@@ -694,9 +694,12 @@ export default function TokenGame() {
               </div>
             </div>
 
-            <div className="answer-stream" aria-live="polite">
-              {answer || <span className="cursor-copy">Your answer starts here</span>}
-              <span className="cursor" aria-hidden="true" />
+            <div className="response-block">
+              <span className="prompt-role assistant-role">assistant:</span>
+              <div className="answer-stream" aria-live="polite">
+                {answer || <span className="cursor-copy">Your answer starts here</span>}
+                <span className="cursor" aria-hidden="true" />
+              </div>
             </div>
 
             <div className="token-zone">

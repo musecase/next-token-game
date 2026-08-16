@@ -242,15 +242,18 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
   return (
     <div className="play-panel local-play">
       <div className="play-heading">
-        <div><span className="card-label">QUESTION · LIVE LOCAL MODEL</span><h2>{question}</h2></div>
+        <div><span className="prompt-role">user:</span><h2>{question}</h2></div>
         <div className="play-controls">
           <button className="finish-button" onClick={() => setPhase("result")} disabled={tokens.length === 0}>FINISH</button>
           <div className={`timer ${seconds < 10 ? "timer-hot" : ""}`}><span>{seconds}</span><small>SEC</small></div>
         </div>
       </div>
-      <div className="answer-stream" aria-live="polite">
-        {answer || <span className="cursor-copy">Your answer starts here</span>}
-        <span className="cursor" aria-hidden="true" />
+      <div className="response-block">
+        <span className="prompt-role assistant-role">assistant:</span>
+        <div className="answer-stream" aria-live="polite">
+          {answer || <span className="cursor-copy">Your answer starts here</span>}
+          <span className="cursor" aria-hidden="true" />
+        </div>
       </div>
       <div className={`token-zone ${busy ? "token-zone-busy" : ""}`}>
         <div className="zone-heading"><span>{busy ? "CALCULATING THE NEXT CLOUD…" : "CHOOSE THE NEXT TOKEN"}</span><span>REAL LOGITS · {tokens.length} CHOSEN</span></div>
