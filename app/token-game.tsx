@@ -424,7 +424,7 @@ const CLOUD_Y = [5, -7, 8, 1, -8, 4, 7, -3, -5, 8, -2, 3];
 
 export default function TokenGame() {
   const [mode, setMode] = useState<Mode>("intro");
-  const [skin, setSkin] = useState<Skin>("panel");
+  const [skin, setSkin] = useState<Skin>("cli");
   const [questionDraft, setQuestionDraft] = useState("");
   const [preparedRound, setPreparedRound] = useState<PreparedRound>({
     question: QUESTION,

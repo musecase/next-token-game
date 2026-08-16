@@ -1011,6 +1011,157 @@ h1, h2, p { margin-top: 0; }
 .skin-cli .arcade-name-form input { border-color: #55ffff; border-radius: 0; background: #071426; }
 .skin-cli .arcade-name-form button { border-radius: 0; background: #55ffff; }
 
+/* Carry the terminal frame through every screen after launch. */
+.skin-cli :is(
+  .preparing-panel,
+  .prepare-error-panel,
+  .local-permission,
+  .local-loading,
+  .local-error,
+  .result-panel,
+  .steer-menu
+) {
+  padding: clamp(22px, 4vw, 40px);
+  border: 1px solid #55ffff;
+  border-top: 8px solid #0000aa;
+  background:
+    linear-gradient(180deg, rgba(0,0,170,.18), transparent 86px),
+    rgba(7,20,38,.88);
+  box-shadow: none;
+}
+.skin-cli :is(
+  .preparing-panel,
+  .prepare-error-panel,
+  .local-permission,
+  .local-loading,
+  .local-error,
+  .result-panel,
+  .steer-menu
+) > h1 {
+  margin: 10px 0 18px;
+  color: #ffffff;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: .92;
+}
+.skin-cli :is(
+  .preparing-panel,
+  .prepare-error-panel,
+  .local-permission,
+  .local-loading,
+  .local-error,
+  .result-panel,
+  .steer-menu
+) > .lede { margin-bottom: 26px; }
+
+.skin-cli :is(.play-heading, .steer-play-heading) {
+  padding: 18px 20px;
+  border: 1px solid #55ffff;
+  border-top: 7px solid #0000aa;
+  background: #071426;
+}
+.skin-cli :is(.play-heading, .steer-play-heading) h2 {
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: clamp(24px, 4.2vw, 44px);
+  line-height: 1.04;
+  letter-spacing: -.04em;
+}
+.skin-cli .answer-stream {
+  border: 1px solid #55ffff;
+  border-left: 7px solid #55ffff;
+  background: #000000;
+  font-family: var(--font-mono);
+}
+.skin-cli .token-zone {
+  border: 1px solid #55ffff;
+  border-top: 7px solid #0000aa;
+  background: #071426;
+}
+.skin-cli .zone-heading {
+  padding-bottom: 11px;
+  border-bottom: 1px solid #00aaaa;
+}
+.skin-cli .meters > div {
+  padding: 13px 14px;
+  border: 1px solid #00aaaa;
+  background: #071426;
+}
+.skin-cli .meter-ends { color: #aaaaaa; }
+
+.skin-cli .comparison-grid { gap: 10px; }
+.skin-cli .answer-card-heading {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #00aaaa;
+}
+.skin-cli .answer-card p { font-family: var(--font-mono); }
+.skin-cli .result-meter,
+.skin-cli .lab-readout > div,
+.skin-cli .steer-scoreline > div,
+.skin-cli .steer-brief > div {
+  border-color: #00aaaa;
+  background: #071426;
+  color: #ffffff;
+}
+.skin-cli .result-meter-heading strong,
+.skin-cli .lab-readout strong,
+.skin-cli .steer-scoreline strong,
+.skin-cli .steer-brief strong { color: #ffff55; }
+.skin-cli .result-actions { padding-top: 6px; }
+
+.skin-cli .preparing-steps {
+  border-color: #55ffff;
+  border-top: 7px solid #0000aa;
+}
+.skin-cli .download-copy {
+  padding: 9px 11px;
+  border: 1px solid #00aaaa;
+  border-top: 0;
+  background: #000000;
+  color: #55ffff;
+}
+.skin-cli .local-warning {
+  border: 1px solid #55ffff;
+  border-left: 7px solid #ffff55;
+  background: #000000;
+}
+.skin-cli .local-warning strong { color: #ffff55; }
+
+.skin-cli .steer-daily-card {
+  border: 1px solid #55ffff;
+  border-top: 8px solid #0000aa;
+  background: #000000;
+}
+.skin-cli .steer-daily-heading {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #00aaaa;
+}
+.skin-cli .steer-daily-heading h2 {
+  color: #ffffff;
+  font-family: var(--font-mono);
+}
+.skin-cli .steer-daily-puzzle {
+  border-color: #00aaaa;
+  background: #071426;
+}
+.skin-cli .steer-daily-puzzle:hover { border-color: #55ffff; background: #0a1d34; }
+.skin-cli .steer-daily-puzzle-won { border-color: #55ff55; background: #003300; }
+.skin-cli .steer-archive-picker {
+  border-color: #00aaaa;
+  background: #000000;
+}
+.skin-cli .steer-target-live {
+  align-self: stretch;
+  display: grid;
+  align-content: center;
+}
+.skin-cli .steer-run-controls {
+  padding: 13px 14px;
+  border: 1px solid #00aaaa;
+  background: #000000;
+}
+.skin-cli .steer-path-card { border-left: 7px solid #55ffff; }
+.skin-cli .arcade-board-heading { color: #55ffff; }
+
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes cloud-in { from { opacity: 0; filter: blur(2px); } }
 @keyframes blink { 50% { opacity: 0; } }
