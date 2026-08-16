@@ -541,54 +541,68 @@ export default function TokenGame() {
           <span>NEXT TOKEN</span>
         </a>
         <div className="prototype-badge">
-          <span className="status-dot" /> {mode === "steer" ? "DAILY STEER · PILOT" : "PROTOTYPE ROUND"}
+          <span className="status-dot" /> {mode === "steer" ? "daily_steer: live" : "model_status: playable"}
         </div>
       </header>
 
       <section className="game-stage" id="top">
         {mode === "intro" && (
           <div className="intro-panel">
-            <p className="eyebrow">A game about how language models talk</p>
-            <h1>You are the model.</h1>
-            <p className="lede">
-              Answer a question one token at a time. Big choices are likely.
-              Small choices are tempting. Keep moving.
-            </p>
-
-            <form className="question-card question-form" onSubmit={prepareCustomRound}>
-              <label className="card-label" htmlFor="custom-question">YOUR QUESTION</label>
-              <textarea
-                id="custom-question"
-                value={questionDraft}
-                onChange={(event) => setQuestionDraft(event.target.value)}
-                maxLength={220}
-                rows={3}
-                placeholder="Why do we dream?"
-              />
-              <div className="question-form-footer">
-                <span>{questionDraft.length}/220</span>
-                <button className="primary-button" type="submit" disabled={customQuestions !== "ready"}>
-                  {customQuestions === "ready" ? "PREPARE THIS ROUND" : customQuestions === "checking" ? "CHECKING THE SWITCH…" : "CUSTOM ROUND NEEDS KEY"}
-                  {customQuestions === "ready" && <span aria-hidden="true"> →</span>}
-                </button>
+            <div className="intro-layout">
+              <div className="intro-copy">
+                <p className="eyebrow"><span aria-hidden="true">&gt;_</span> Human inference emulator</p>
+                <h1>You are<br /><span>the model.</span></h1>
+                <p className="lede">
+                  Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
+                </p>
+                <dl className="intro-readout" aria-label="Game conditions">
+                  <div><dt>input</dt><dd>one question</dd></div>
+                  <div><dt>output</dt><dd>locally plausible</dd></div>
+                  <div><dt>operator</dt><dd>you, unfortunately</dd></div>
+                </dl>
               </div>
-            </form>
 
-            <p className="tiny-note">
-              {customQuestions === "off"
-                ? "Custom questions are wired but safely off until the server key is connected. The rounds below work now."
-                : "One small cloud call prepares the facts · every token choice runs on your device"}
-            </p>
-            <div className="intro-alternatives">
-              <button className="lab-button daily-steer-button" onClick={() => setMode("steer")}>
-                PLAY DAILY STEER <span>NEW</span>
-              </button>
-              <button className="lab-button" onClick={openReadyMadeLocalRound}>
-                TRY A READY-MADE LOCAL ROUND <span>REAL MODEL</span>
-              </button>
-              <button className="lab-button" onClick={startRound}>
-                NO-DOWNLOAD CURATED DEMO
-              </button>
+              <div className="input-console">
+                <div className="console-header">
+                  <span>INPUT PORT / QUESTION</span>
+                  <span><i aria-hidden="true" /> READY</span>
+                </div>
+                <form className="question-card question-form" onSubmit={prepareCustomRound}>
+                  <label className="card-label" htmlFor="custom-question">TYPE ANY QUESTION</label>
+                  <textarea
+                    id="custom-question"
+                    value={questionDraft}
+                    onChange={(event) => setQuestionDraft(event.target.value)}
+                    maxLength={220}
+                    rows={3}
+                    placeholder="Why do we dream?"
+                  />
+                  <div className="question-form-footer">
+                    <span>{questionDraft.length}/220 chars</span>
+                    <button className="primary-button" type="submit" disabled={customQuestions !== "ready"}>
+                      {customQuestions === "ready" ? "PREPARE THIS ROUND" : customQuestions === "checking" ? "CHECKING THE SWITCH…" : "CUSTOM ROUND NEEDS KEY"}
+                      {customQuestions === "ready" && <span aria-hidden="true"> →</span>}
+                    </button>
+                  </div>
+                </form>
+
+                <p className="tiny-note">
+                  {customQuestions === "off"
+                    ? "Custom input is offline until the server key is connected. The three switches below work now."
+                    : "Facts prepared in the cloud · token choices run on your device"}
+                </p>
+                <div className="intro-alternatives">
+                  <button className="lab-button daily-steer-button" onClick={() => setMode("steer")}>
+                    DAILY STEER <span>NEW</span>
+                  </button>
+                  <button className="lab-button" onClick={openReadyMadeLocalRound}>
+                    LOCAL MODEL <span>570 MB</span>
+                  </button>
+                  <button className="lab-button" onClick={startRound}>
+                    INSTANT DEMO
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -751,7 +765,7 @@ export default function TokenGame() {
 
       <footer>
         <span>One question. Many locally plausible futures.</span>
-        <span>First playable slice · curated probability map</span>
+        <span>temperature: human · confidence: suspicious</span>
       </footer>
     </main>
   );
