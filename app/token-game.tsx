@@ -562,30 +562,33 @@ export default function TokenGame() {
               <div className="intro-copy">
                 <p className="eyebrow"><span aria-hidden="true">&gt;_</span> Human inference emulator</p>
                 <h1 className="game-title" aria-label="Token Tumble">
-                  <span className="ascii-cap" aria-hidden="true">┌─[ token_tumble.exe ]─────┐</span>
                   <span className="title-word">Token</span>
                   <span className="ascii-separator" aria-hidden="true">_</span>
                   <span className="title-word title-word-accent">Tumble</span>
-                  <span className="ascii-art" aria-hidden="true">
-                    <span className="ascii-word ascii-token">{`▀█▀ █▀█ █▄▀ █▀▀ █▄░█\n░█░ █▄█ █░█ ██▄ █░▀█`}</span>
-                    <span className="ascii-word ascii-tumble">{`▀█▀ █░█ █▀▄▀█ █▀▄ █░░ █▀▀\n░█░ █▄█ █░▀░█ █▄▀ █▄▄ ██▄`}</span>
+                  <span className="ascii-terminal" aria-hidden="true">
+                    <span className="ascii-cap">+--[ token_tumble.exe ]-----+</span>
+                    <span className="ascii-title-row"><i>| &gt;</i><b>TOKEN_</b><i>|</i></span>
+                    <span className="ascii-title-row ascii-title-accent"><i>| &gt;</i><b>TUMBLE</b><i>|</i></span>
+                    <span className="ascii-cap">+----------------------------+</span>
                   </span>
-                  <span className="ascii-cap" aria-hidden="true">└──────────────────────────┘</span>
                 </h1>
                 <p className="lede">
                   <strong>You are the model.</strong> Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
                 </p>
-                <button className="daily-launch" type="button" onClick={() => setMode("steer")}>
-                  <span className="daily-launch-kicker">[ daily_challenge ]</span>
-                  <strong>PLAY DAILY STEER <span aria-hidden="true">→</span></strong>
+                <div className="daily-launch">
+                  <span className="section-kicker">[ daily_challenge ]</span>
+                  <strong>DAILY STEER</strong>
                   <small>Three puzzles · unlimited retries · today’s leaderboard</small>
-                </button>
+                  <button className="primary-button daily-launch-button" type="button" onClick={() => setMode("steer")}>
+                    PLAY TODAY’S THREE <span aria-hidden="true">→</span>
+                  </button>
+                </div>
               </div>
 
               <div className="input-console">
                 <div className="console-header">
-                  <span>SIMULATOR / INPUT PORT</span>
-                  <span><i aria-hidden="true" /> READY</span>
+                  <span className="section-kicker">[ simulator ]</span>
+                  <span><i aria-hidden="true" /> [ ready ]</span>
                 </div>
                 <form className="question-card question-form" onSubmit={prepareCustomRound}>
                   <label className="card-label" htmlFor="custom-question">TYPE ANY QUESTION</label>
@@ -612,11 +615,11 @@ export default function TokenGame() {
                     : "Facts prepared in the cloud · token choices run on your device"}
                 </p>
                 <div className="intro-alternatives">
-                  <button className="lab-button" onClick={openReadyMadeLocalRound}>
-                    LOCAL MODEL <span>570 MB</span>
+                  <button className="lab-button" type="button" onClick={openReadyMadeLocalRound}>
+                    LOCAL MODEL <span>570 MB</span><b className="action-arrow" aria-hidden="true">→</b>
                   </button>
-                  <button className="lab-button" onClick={startRound}>
-                    INSTANT DEMO
+                  <button className="lab-button" type="button" onClick={startRound}>
+                    INSTANT DEMO <b className="action-arrow" aria-hidden="true">→</b>
                   </button>
                 </div>
               </div>
