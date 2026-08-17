@@ -3,6 +3,7 @@
 import { CSSProperties, useEffect, useMemo, useState } from "react";
 import DailySteer from "./daily-steer";
 import LocalModelLab from "./local-model-lab";
+import { getTokenVisual, getTokenVisualRange } from "./token-visuals";
 
 type Lane = "fact" | "plausible" | "drift";
 type Skin = "panel" | "cli";
@@ -473,7 +474,10 @@ export default function TokenGame() {
 
   const choices = useMemo(() => getChoices(step, drift), [step, drift]);
   const cloudChoices = useMemo(() => scatterChoices(choices, step), [choices, step]);
-  const peakProbability = Math.max(choices[0]?.probability ?? 1, Number.EPSILON);
+  const tokenVisualRange = useMemo(
+    () => getTokenVisualRange(choices.map((choice) => choice.probability)),
+    [choices],
+  );
   const answer = tokens.join("").trim();
   const greedyPull = tokens.length ? (greedyPicks / tokens.length) * 100 : 0;
   const driftLevel = Math.min(100, (drift / 6) * 100);
@@ -752,10 +756,10 @@ export default function TokenGame() {
               </div>
               <div className="token-cloud">
                 {cloudChoices.map((choice, index) => {
-                  const relativeProbability = choice.probability / peakProbability;
+                  const visual = getTokenVisual(choice.probability, tokenVisualRange);
                   const style = {
-                    "--token-scale": 0.76 + Math.pow(Math.max(0.02, relativeProbability), 1.1) * 0.72,
-                    "--token-alpha": 0.22 + Math.pow(Math.max(0.02, relativeProbability), 1.1) * 0.78,
+                    "--token-scale": visual.scale,
+                    "--token-alpha": visual.alpha,
                     "--cloud-x": `${CLOUD_X[index]}px`,
                     "--cloud-y": `${CLOUD_Y[index]}px`,
                   } as CSSProperties;

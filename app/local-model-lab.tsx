@@ -1,6 +1,7 @@
 "use client";
 
 import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { getTokenVisual, getTokenVisualRange } from "./token-visuals";
 
 type LocalChoice = {
   id: number;
@@ -65,6 +66,10 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
 
   const answer = tokens.join("").trim();
   const cloudChoices = useMemo(() => scatterChoices(choices, step), [choices, step]);
+  const tokenVisualRange = useMemo(
+    () => getTokenVisualRange(choices.map((choice) => choice.probability)),
+    [choices],
+  );
   const deviceMemory = typeof navigator !== "undefined" && "deviceMemory" in navigator
     ? `${(navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? "?"} GB class`
     : "not reported";
@@ -259,9 +264,10 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
         <div className="zone-heading"><span>{busy ? "CALCULATING THE NEXT CLOUD…" : "CHOOSE THE NEXT TOKEN"}</span><span>REAL LOGITS · {tokens.length} CHOSEN</span></div>
         <div className="token-cloud">
           {cloudChoices.map((choice, index) => {
+            const visual = getTokenVisual(choice.probability, tokenVisualRange);
             const style = {
-              "--token-scale": 0.76 + Math.pow(Math.max(0.02, choice.relative), 1.1) * 0.72,
-              "--token-alpha": 0.22 + Math.pow(Math.max(0.02, choice.relative), 1.1) * 0.78,
+              "--token-scale": visual.scale,
+              "--token-alpha": visual.alpha,
               "--cloud-x": `${CLOUD_X[index]}px`,
               "--cloud-y": `${CLOUD_Y[index]}px`,
             } as CSSProperties;
