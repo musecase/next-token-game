@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { CSSProperties, useEffect, useMemo, useState } from "react";
 import DailySteer from "./daily-steer";
 import LocalModelLab from "./local-model-lab";
@@ -604,6 +605,9 @@ export default function TokenGame() {
                 <p className="lede">
                   Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
                 </p>
+                <Link className="explainer-link" href="/about">
+                  [ what_are_tokens? ] <span aria-hidden="true">→</span>
+                </Link>
                 <div className="daily-launch">
                   <span className="section-kicker">[ daily_challenge ]</span>
                   <strong>DAILY STEER</strong>
@@ -613,62 +617,72 @@ export default function TokenGame() {
                 </div>
               </div>
 
-              <div className="input-console">
-                <div className="console-header">
-                  <span className="section-kicker">[ simulator ]</span>
-                  <span><i aria-hidden="true" /> [ ready ]</span>
-                </div>
-                <form className="question-card question-form" onSubmit={prepareCustomRound}>
-                  <label className="prompt-role" htmlFor="custom-question">user:</label>
-                  <div className="prompt-entry">
-                    <span aria-hidden="true">&gt;</span>
-                    <textarea
-                      id="custom-question"
-                      value={questionDraft}
-                      onChange={(event) => setQuestionDraft(event.target.value)}
-                      maxLength={220}
-                      rows={3}
-                      placeholder="Why do we dream?"
-                    />
+              <div className="mode-stack">
+                <section className="mode-panel simulator-panel" aria-labelledby="simulator-panel-title">
+                  <div className="console-header">
+                    <span className="section-kicker" id="simulator-panel-title">[ simulator ]</span>
+                    <span><i aria-hidden="true" /> [ ready ]</span>
                   </div>
-                  <div className="question-form-footer">
-                    <span>{questionDraft.length}/220 chars</span>
-                    <button
-                      aria-label={customQuestions === "ready" ? "Start the assistant response" : undefined}
-                      className="primary-button"
-                      type="submit"
-                      disabled={customQuestions !== "ready"}
-                    >
-                      {customQuestions === "ready" ? "assistant:" : customQuestions === "checking" ? "assistant: checking…" : "assistant: unavailable"}
+                  <form className="question-card question-form" onSubmit={prepareCustomRound}>
+                    <label className="prompt-role" htmlFor="custom-question">user:</label>
+                    <div className="prompt-entry">
+                      <span aria-hidden="true">&gt;</span>
+                      <textarea
+                        id="custom-question"
+                        value={questionDraft}
+                        onChange={(event) => setQuestionDraft(event.target.value)}
+                        maxLength={220}
+                        rows={3}
+                        placeholder="Why do we dream?"
+                      />
+                    </div>
+                    <div className="question-form-footer">
+                      <span>{questionDraft.length}/220 chars</span>
+                      <button
+                        aria-label={customQuestions === "ready" ? "Start the assistant response" : undefined}
+                        className="primary-button"
+                        type="submit"
+                        disabled={customQuestions !== "ready"}
+                      >
+                        {customQuestions === "ready" ? "assistant:" : customQuestions === "checking" ? "assistant: checking…" : "assistant: unavailable"}
+                      </button>
+                    </div>
+                  </form>
+                  <p className="tiny-note">
+                    {customQuestions === "off"
+                      ? "Custom input is offline until the server key is connected. The other modes work now."
+                      : "Facts prepared in the cloud · token choices run on your device"}
+                  </p>
+                </section>
+
+                <section className="mode-panel local-round-panel" aria-labelledby="local-round-panel-title">
+                  <div className="console-header">
+                    <span className="section-kicker" id="local-round-panel-title">[ local_model ]</span>
+                    <span>[ 570 MB · once ]</span>
+                  </div>
+                  <div className="local-round-options">
+                    {READY_MADE_ROUNDS.map((round, index) => (
+                      <button key={round.question} type="button" onClick={() => openReadyMadeLocalRound(round)}>
+                        <small>{String(index + 1).padStart(2, "0")}</small>
+                        <span>{round.question}</span>
+                        <b aria-hidden="true">→</b>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="mode-panel instant-demo-panel" aria-labelledby="instant-demo-panel-title">
+                  <div className="console-header">
+                    <span className="section-kicker" id="instant-demo-panel-title">[ instant_demo ]</span>
+                    <span>[ no download ]</span>
+                  </div>
+                  <div className="instant-demo-body">
+                    <p>Curated token probabilities. Starts immediately.</p>
+                    <button className="lab-button" type="button" onClick={startRound}>
+                      PLAY DEMO <b className="action-arrow" aria-hidden="true">→</b>
                     </button>
                   </div>
-                </form>
-
-                <p className="tiny-note">
-                  {customQuestions === "off"
-                    ? "Custom input is offline until the server key is connected. The simulator options below work now."
-                    : "Facts prepared in the cloud · token choices run on your device"}
-                </p>
-                <div className="intro-alternatives">
-                  <section className="local-round-bank" aria-labelledby="local-round-bank-title">
-                    <div className="local-round-bank-header">
-                      <strong id="local-round-bank-title">[ local_model ]</strong>
-                      <span>one 570 MB download · choose a question</span>
-                    </div>
-                    <div className="local-round-options">
-                      {READY_MADE_ROUNDS.map((round, index) => (
-                        <button key={round.question} type="button" onClick={() => openReadyMadeLocalRound(round)}>
-                          <small>{String(index + 1).padStart(2, "0")}</small>
-                          <span>{round.question}</span>
-                          <b aria-hidden="true">→</b>
-                        </button>
-                      ))}
-                    </div>
-                  </section>
-                  <button className="lab-button" type="button" onClick={startRound}>
-                    INSTANT DEMO <b className="action-arrow" aria-hidden="true">→</b>
-                  </button>
-                </div>
+                </section>
               </div>
 
             </div>
