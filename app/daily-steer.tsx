@@ -191,7 +191,7 @@ export default function DailySteer({ onExit }: Props) {
 
   function begin() {
     if (!("gpu" in navigator)) {
-      setError("Daily Steer needs WebGPU. Current Chrome or Edge is the safest first try; newer phones can work too.");
+      setError("The local model cannot start here because WebGPU is unavailable. Chrome or Edge usually provides the best support; the instant demo is still available.");
       setPhase("error");
       return;
     }
@@ -337,7 +337,7 @@ export default function DailySteer({ onExit }: Props) {
     return (
       <div className="local-error">
         <p className="eyebrow">Daily Steer stopped</p>
-        <h1>That path closed.</h1>
+        <h1>Local model unavailable here.</h1>
         <p className="lede">{error}</p>
         <div className="result-actions">
           <button className="primary-button" onClick={() => setPhase("menu")}>BACK TO THE ARCHIVE</button>

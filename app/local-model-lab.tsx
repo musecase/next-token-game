@@ -96,7 +96,7 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
 
   function begin() {
     if (!("gpu" in navigator)) {
-      setError("This experiment needs WebGPU. Current Chrome or Edge is the safest first try; newer phones can work too.");
+      setError("The local model cannot start here because WebGPU is unavailable. Chrome or Edge usually provides the best support; the instant demo is still available.");
       setPhase("error");
       return;
     }
@@ -201,7 +201,7 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
     return (
       <div className="local-error">
         <p className="eyebrow">The experiment stopped</p>
-        <h1>That device said no.</h1>
+        <h1>Local model unavailable here.</h1>
         <p className="lede">{error}</p>
         <button className="primary-button" onClick={onExit}>BACK TO THE PLAYABLE VERSION</button>
       </div>
