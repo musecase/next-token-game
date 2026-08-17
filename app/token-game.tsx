@@ -6,7 +6,6 @@ import LocalModelLab from "./local-model-lab";
 import { getTokenVisual, getTokenVisualRange } from "./token-visuals";
 
 type Lane = "fact" | "plausible" | "drift";
-type Skin = "panel" | "cli";
 
 type TokenChoice = {
   text: string;
@@ -456,7 +455,6 @@ const CLOUD_Y = [5, -7, 8, 1, -8, 4, 7, -3, -5, 8, -2, 3];
 
 export default function TokenGame() {
   const [mode, setMode] = useState<Mode>("intro");
-  const [skin, setSkin] = useState<Skin>("cli");
   const [questionDraft, setQuestionDraft] = useState("");
   const [preparedRound, setPreparedRound] = useState<PreparedRound>({
     question: QUESTION,
@@ -572,18 +570,13 @@ export default function TokenGame() {
   }
 
   return (
-    <main className={`game-shell skin-${skin}`}>
+    <main className="game-shell skin-cli">
       <header className="topbar">
         <a className="brand" href="#top" aria-label="Token Tumble home">
           <span className="brand-mark">T</span>
           <span>TOKEN TUMBLE</span>
         </a>
         <div className="topbar-tools">
-          <div className="skin-switcher" aria-label="Preview visual style">
-            <span>render:</span>
-            <button type="button" aria-pressed={skin === "panel"} onClick={() => setSkin("panel")}>panel.ui</button>
-            <button type="button" aria-pressed={skin === "cli"} onClick={() => setSkin("cli")}>cli.exe</button>
-          </div>
           <div className="prototype-badge">
             <span className="status-dot" /> {mode === "steer" ? "daily_steer: live" : "model_status: playable"}
           </div>
