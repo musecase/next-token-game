@@ -90,26 +90,6 @@ button { font: inherit; }
   gap: clamp(14px, 3vw, 34px);
 }
 
-.skin-switcher {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-}
-.skin-switcher > span { margin-right: 3px; color: rgba(20,19,15,.5); }
-.skin-switcher button {
-  min-height: 28px;
-  padding: 5px 8px;
-  border: 1px solid var(--ink);
-  border-radius: 2px;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
-.skin-switcher button[aria-pressed="true"] { background: var(--ink); color: var(--acid); }
-.skin-switcher button:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
-
 .status-dot {
   width: 7px;
   height: 7px;
@@ -807,7 +787,7 @@ h1, h2, p { margin-top: 0; }
 .arcade-board-offline strong { display: block; margin-top: 5px; color: var(--acid); }
 .arcade-board-offline p { margin: 0; color: rgba(255,255,255,.65); }
 
-/* Temporary comparison skin: CLI proportions without pretending the browser is an 80-column terminal. */
+/* CLI proportions without pretending the browser is an 80-column terminal. */
 .skin-cli {
   --ink: #ffffff;
   --paper: #050914;
@@ -835,9 +815,6 @@ h1, h2, p { margin-top: 0; }
   color: #ffff55;
   box-shadow: none;
 }
-.skin-cli .skin-switcher > span { color: #aaaaaa; }
-.skin-cli .skin-switcher button { border-color: #55ffff; background: #000000; color: #55ffff; }
-.skin-cli .skin-switcher button[aria-pressed="true"] { background: #55ffff; color: #000000; }
 .skin-cli .prototype-badge { color: #ffffff; }
 .skin-cli .status-dot { background: #55ff55; box-shadow: 0 0 8px #55ff55; }
 
@@ -1278,11 +1255,6 @@ h1, h2, p { margin-top: 0; }
   .steer-scoreline { grid-template-columns: 1fr; }
   .arcade-name-form > div { grid-template-columns: 1fr; }
   .arcade-name-form button { min-height: 42px; }
-}
-
-@media (max-width: 430px) {
-  .skin-switcher > span { display: none; }
-  .skin-switcher button { padding-inline: 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
