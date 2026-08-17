@@ -11,15 +11,19 @@
     "build": "next build",
     "start": "next start",
     "test": "npm run build",
+    "build:puzzle-bank": "node scripts/build-daily-puzzle-bank.mjs",
+    "validate:puzzles": "node scripts/validate-daily-puzzles.mjs",
     "dev:sites": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
     "build:sites": "bash scripts/build-verified.sh",
     "test:sites": "npm run build:sites && node --test tests/rendered-html.test.mjs",
     "validate:artifact": "bash scripts/validate-artifact.sh",
-    "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "bash scripts/sites-env.sh -- drizzle-kit generate"
   },
   "dependencies": {
     "@huggingface/transformers": "4.2.0",
+    "@upstash/ratelimit": "2.0.8",
+    "@upstash/redis": "1.38.2",
     "drizzle-orm": "0.45.2",
     "next": "16.2.6",
     "react": "19.2.6",
@@ -44,5 +48,5 @@
     "wrangler": "4.92.0"
   },
   "type": "module",
-  "displayName": "Next Token"
+  "displayName": "Token Tumble"
 }

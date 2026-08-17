@@ -1,9 +1,12 @@
 "use client";
 
 import { CSSProperties, useEffect, useMemo, useState } from "react";
+import DailySteer from "./daily-steer";
 import LocalModelLab from "./local-model-lab";
+import { getTokenVisual, getTokenVisualRange } from "./token-visuals";
 
 type Lane = "fact" | "plausible" | "drift";
+type Skin = "panel" | "cli";
 
 type TokenChoice = {
   text: string;
@@ -375,7 +378,38 @@ type PreparedRound = {
   factPacket: string[];
 };
 
-type Mode = "intro" | "preparing" | "prepareError" | "playing" | "result" | "local";
+const READY_MADE_ROUNDS: PreparedRound[] = [
+  { question: QUESTION, reference: REFERENCE, factPacket: FACT_PACKET },
+  {
+    question: "Why do cats purr?",
+    reference: "Cats purr in several situations, including comfort, social contact, stress, and pain. The sound comes from rapid, regular movement of tissues around the larynx as the cat breathes, though its exact biological purpose is not fully settled.",
+    factPacket: [
+      "Cats purr when relaxed, but they may also purr when stressed, injured, or seeking contact.",
+      "Purring involves rapid, rhythmic activity around the larynx while air moves during breathing.",
+      "Purring can communicate between cats and with humans; it probably does not have only one purpose.",
+    ],
+  },
+  {
+    question: "Why do glow sticks stay cool?",
+    reference: "Glow sticks use chemiluminescence: a chemical reaction transfers energy into dye molecules, which release that energy as visible light. Very little energy becomes heat, so the stick glows without becoming hot.",
+    factPacket: [
+      "Glow sticks produce light through a chemical reaction called chemiluminescence.",
+      "The reaction excites dye molecules, which release energy as photons of visible light.",
+      "Only a small amount of the reaction's energy becomes heat, so glow sticks remain near ambient temperature.",
+    ],
+  },
+  {
+    question: "How do octopuses change color so quickly?",
+    reference: "Octopuses rapidly expand and contract pigment sacs called chromatophores using muscles controlled by their nervous system. Reflective cells beneath them alter how light is reflected, adding iridescent, pale, and patterned effects.",
+    factPacket: [
+      "Octopus skin contains pigment sacs called chromatophores that can expand or contract.",
+      "The nervous system directly controls muscles around chromatophores, allowing changes within fractions of a second.",
+      "Iridophores and leucophores beneath the chromatophores reflect light and add shimmering or pale effects.",
+    ],
+  },
+];
+
+type Mode = "intro" | "preparing" | "prepareError" | "playing" | "result" | "local" | "steer";
 
 function getChoices(step: number, drift: number) {
   const base = ROUND[step] ?? [];
@@ -422,6 +456,7 @@ const CLOUD_Y = [5, -7, 8, 1, -8, 4, 7, -3, -5, 8, -2, 3];
 
 export default function TokenGame() {
   const [mode, setMode] = useState<Mode>("intro");
+  const [skin, setSkin] = useState<Skin>("cli");
   const [questionDraft, setQuestionDraft] = useState("");
   const [preparedRound, setPreparedRound] = useState<PreparedRound>({
     question: QUESTION,
@@ -439,6 +474,10 @@ export default function TokenGame() {
 
   const choices = useMemo(() => getChoices(step, drift), [step, drift]);
   const cloudChoices = useMemo(() => scatterChoices(choices, step), [choices, step]);
+  const tokenVisualRange = useMemo(
+    () => getTokenVisualRange(choices.map((choice) => choice.probability)),
+    [choices],
+  );
   const answer = tokens.join("").trim();
   const greedyPull = tokens.length ? (greedyPicks / tokens.length) * 100 : 0;
   const driftLevel = Math.min(100, (drift / 6) * 100);
@@ -513,8 +552,8 @@ export default function TokenGame() {
     }
   }
 
-  function openReadyMadeLocalRound() {
-    setPreparedRound({ question: QUESTION, reference: REFERENCE, factPacket: FACT_PACKET });
+  function openReadyMadeLocalRound(round: PreparedRound) {
+    setPreparedRound(round);
     setPreparedInCloud(false);
     setMode("local");
   }
@@ -533,58 +572,112 @@ export default function TokenGame() {
   }
 
   return (
-    <main className="game-shell">
+    <main className={`game-shell skin-${skin}`}>
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="Next Token home">
-          <span className="brand-mark">N</span>
-          <span>NEXT TOKEN</span>
+        <a className="brand" href="#top" aria-label="Token Tumble home">
+          <span className="brand-mark">T</span>
+          <span>TOKEN TUMBLE</span>
         </a>
-        <div className="prototype-badge">
-          <span className="status-dot" /> PROTOTYPE ROUND
+        <div className="topbar-tools">
+          <div className="skin-switcher" aria-label="Preview visual style">
+            <span>render:</span>
+            <button type="button" aria-pressed={skin === "panel"} onClick={() => setSkin("panel")}>panel.ui</button>
+            <button type="button" aria-pressed={skin === "cli"} onClick={() => setSkin("cli")}>cli.exe</button>
+          </div>
+          <div className="prototype-badge">
+            <span className="status-dot" /> {mode === "steer" ? "daily_steer: live" : "model_status: playable"}
+          </div>
         </div>
       </header>
 
       <section className="game-stage" id="top">
         {mode === "intro" && (
           <div className="intro-panel">
-            <p className="eyebrow">A game about how language models talk</p>
-            <h1>You are the model.</h1>
-            <p className="lede">
-              Answer a question one token at a time. Big choices are likely.
-              Small choices are tempting. Keep moving.
-            </p>
-
-            <form className="question-card question-form" onSubmit={prepareCustomRound}>
-              <label className="card-label" htmlFor="custom-question">YOUR QUESTION</label>
-              <textarea
-                id="custom-question"
-                value={questionDraft}
-                onChange={(event) => setQuestionDraft(event.target.value)}
-                maxLength={220}
-                rows={3}
-                placeholder="Why do we dream?"
-              />
-              <div className="question-form-footer">
-                <span>{questionDraft.length}/220</span>
-                <button className="primary-button" type="submit" disabled={customQuestions !== "ready"}>
-                  {customQuestions === "ready" ? "PREPARE THIS ROUND" : customQuestions === "checking" ? "CHECKING THE SWITCH…" : "CUSTOM ROUND NEEDS KEY"}
-                  {customQuestions === "ready" && <span aria-hidden="true"> →</span>}
-                </button>
+            <div className="intro-layout">
+              <div className="intro-copy">
+                <p className="eyebrow"><span aria-hidden="true">&gt;_</span> Human inference emulator</p>
+                <h1 className="game-title" aria-label="Token Tumble">
+                  <span className="title-word">Token</span>
+                  <span className="ascii-separator" aria-hidden="true">_</span>
+                  <span className="title-word title-word-accent">Tumble</span>
+                  <span className="ascii-terminal" aria-hidden="true">
+                    <span className="ascii-cap">+--[ token_tumble.exe ]-----+</span>
+                    <span className="ascii-title-row"><i>| &gt;</i><b>TOKEN_</b><i>|</i></span>
+                    <span className="ascii-title-row ascii-title-accent"><i>| &gt;</i><b>TUMBLE</b><i>|</i></span>
+                    <span className="ascii-cap">+----------------------------+</span>
+                  </span>
+                </h1>
+                <p className="eyebrow model-role"><span aria-hidden="true">&gt;_</span> You are the model</p>
+                <p className="lede">
+                  Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
+                </p>
+                <div className="daily-launch">
+                  <span className="section-kicker">[ daily_challenge ]</span>
+                  <strong>DAILY STEER</strong>
+                  <button className="primary-button daily-launch-button" type="button" onClick={() => setMode("steer")}>
+                    PLAY TODAY’S THREE <span aria-hidden="true">→</span>
+                  </button>
+                </div>
               </div>
-            </form>
 
-            <p className="tiny-note">
-              {customQuestions === "off"
-                ? "Custom questions are wired but safely off until the server key is connected. The rounds below work now."
-                : "One small cloud call prepares the facts · every token choice runs on your device"}
-            </p>
-            <div className="intro-alternatives">
-              <button className="lab-button" onClick={openReadyMadeLocalRound}>
-                TRY A READY-MADE LOCAL ROUND <span>REAL MODEL</span>
-              </button>
-              <button className="lab-button" onClick={startRound}>
-                NO-DOWNLOAD CURATED DEMO
-              </button>
+              <div className="input-console">
+                <div className="console-header">
+                  <span className="section-kicker">[ simulator ]</span>
+                  <span><i aria-hidden="true" /> [ ready ]</span>
+                </div>
+                <form className="question-card question-form" onSubmit={prepareCustomRound}>
+                  <label className="prompt-role" htmlFor="custom-question">user:</label>
+                  <div className="prompt-entry">
+                    <span aria-hidden="true">&gt;</span>
+                    <textarea
+                      id="custom-question"
+                      value={questionDraft}
+                      onChange={(event) => setQuestionDraft(event.target.value)}
+                      maxLength={220}
+                      rows={3}
+                      placeholder="Why do we dream?"
+                    />
+                  </div>
+                  <div className="question-form-footer">
+                    <span>{questionDraft.length}/220 chars</span>
+                    <button
+                      aria-label={customQuestions === "ready" ? "Start the assistant response" : undefined}
+                      className="primary-button"
+                      type="submit"
+                      disabled={customQuestions !== "ready"}
+                    >
+                      {customQuestions === "ready" ? "assistant:" : customQuestions === "checking" ? "assistant: checking…" : "assistant: unavailable"}
+                    </button>
+                  </div>
+                </form>
+
+                <p className="tiny-note">
+                  {customQuestions === "off"
+                    ? "Custom input is offline until the server key is connected. The simulator options below work now."
+                    : "Facts prepared in the cloud · token choices run on your device"}
+                </p>
+                <div className="intro-alternatives">
+                  <section className="local-round-bank" aria-labelledby="local-round-bank-title">
+                    <div className="local-round-bank-header">
+                      <strong id="local-round-bank-title">[ local_model ]</strong>
+                      <span>one 570 MB download · choose a question</span>
+                    </div>
+                    <div className="local-round-options">
+                      {READY_MADE_ROUNDS.map((round, index) => (
+                        <button key={round.question} type="button" onClick={() => openReadyMadeLocalRound(round)}>
+                          <small>{String(index + 1).padStart(2, "0")}</small>
+                          <span>{round.question}</span>
+                          <b aria-hidden="true">→</b>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                  <button className="lab-button" type="button" onClick={startRound}>
+                    INSTANT DEMO <b className="action-arrow" aria-hidden="true">→</b>
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
         )}
@@ -609,7 +702,7 @@ export default function TokenGame() {
             <p className="lede">{prepareError}</p>
             <div className="result-actions">
               <button className="primary-button" onClick={() => setMode("intro")}>TRY ANOTHER QUESTION</button>
-              <button className="text-button" onClick={openReadyMadeLocalRound}>PLAY THE READY-MADE ROUND</button>
+              <button className="text-button" onClick={() => openReadyMadeLocalRound(READY_MADE_ROUNDS[0])}>PLAY THE READY-MADE ROUND</button>
             </div>
           </div>
         )}
@@ -624,11 +717,13 @@ export default function TokenGame() {
           />
         )}
 
+        {mode === "steer" && <DailySteer onExit={() => setMode("intro")} />}
+
         {mode === "playing" && (
           <div className="play-panel">
             <div className="play-heading">
               <div>
-                <span className="card-label">QUESTION</span>
+                <span className="prompt-role">user:</span>
                 <h2>{QUESTION}</h2>
               </div>
               <div className="play-controls">
@@ -646,9 +741,12 @@ export default function TokenGame() {
               </div>
             </div>
 
-            <div className="answer-stream" aria-live="polite">
-              {answer || <span className="cursor-copy">Your answer starts here</span>}
-              <span className="cursor" aria-hidden="true" />
+            <div className="response-block">
+              <span className="prompt-role assistant-role">assistant:</span>
+              <div className="answer-stream" aria-live="polite">
+                {answer || <span className="cursor-copy">Your answer starts here</span>}
+                <span className="cursor" aria-hidden="true" />
+              </div>
             </div>
 
             <div className="token-zone">
@@ -658,9 +756,10 @@ export default function TokenGame() {
               </div>
               <div className="token-cloud">
                 {cloudChoices.map((choice, index) => {
+                  const visual = getTokenVisual(choice.probability, tokenVisualRange);
                   const style = {
-                    "--token-scale": 0.82 + Math.sqrt(choice.probability),
-                    "--token-alpha": 0.52 + choice.probability * 1.2,
+                    "--token-scale": visual.scale,
+                    "--token-alpha": visual.alpha,
                     "--cloud-x": `${CLOUD_X[index]}px`,
                     "--cloud-y": `${CLOUD_Y[index]}px`,
                   } as CSSProperties;
@@ -743,10 +842,6 @@ export default function TokenGame() {
         )}
       </section>
 
-      <footer>
-        <span>One question. Many locally plausible futures.</span>
-        <span>First playable slice · curated probability map</span>
-      </footer>
     </main>
   );
 }

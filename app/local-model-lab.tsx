@@ -1,6 +1,7 @@
 "use client";
 
 import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { getTokenVisual, getTokenVisualRange } from "./token-visuals";
 
 type LocalChoice = {
   id: number;
@@ -65,6 +66,10 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
 
   const answer = tokens.join("").trim();
   const cloudChoices = useMemo(() => scatterChoices(choices, step), [choices, step]);
+  const tokenVisualRange = useMemo(
+    () => getTokenVisualRange(choices.map((choice) => choice.probability)),
+    [choices],
+  );
   const deviceMemory = typeof navigator !== "undefined" && "deviceMemory" in navigator
     ? `${(navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? "?"} GB class`
     : "not reported";
@@ -242,23 +247,27 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
   return (
     <div className="play-panel local-play">
       <div className="play-heading">
-        <div><span className="card-label">QUESTION · LIVE LOCAL MODEL</span><h2>{question}</h2></div>
+        <div><span className="prompt-role">user:</span><h2>{question}</h2></div>
         <div className="play-controls">
           <button className="finish-button" onClick={() => setPhase("result")} disabled={tokens.length === 0}>FINISH</button>
           <div className={`timer ${seconds < 10 ? "timer-hot" : ""}`}><span>{seconds}</span><small>SEC</small></div>
         </div>
       </div>
-      <div className="answer-stream" aria-live="polite">
-        {answer || <span className="cursor-copy">Your answer starts here</span>}
-        <span className="cursor" aria-hidden="true" />
+      <div className="response-block">
+        <span className="prompt-role assistant-role">assistant:</span>
+        <div className="answer-stream" aria-live="polite">
+          {answer || <span className="cursor-copy">Your answer starts here</span>}
+          <span className="cursor" aria-hidden="true" />
+        </div>
       </div>
       <div className={`token-zone ${busy ? "token-zone-busy" : ""}`}>
         <div className="zone-heading"><span>{busy ? "CALCULATING THE NEXT CLOUD…" : "CHOOSE THE NEXT TOKEN"}</span><span>REAL LOGITS · {tokens.length} CHOSEN</span></div>
         <div className="token-cloud">
           {cloudChoices.map((choice, index) => {
+            const visual = getTokenVisual(choice.probability, tokenVisualRange);
             const style = {
-              "--token-scale": 0.82 + Math.sqrt(Math.max(0.025, choice.relative)) * 0.32,
-              "--token-alpha": 0.48 + choice.relative * 0.52,
+              "--token-scale": visual.scale,
+              "--token-alpha": visual.alpha,
               "--cloud-x": `${CLOUD_X[index]}px`,
               "--cloud-y": `${CLOUD_Y[index]}px`,
             } as CSSProperties;

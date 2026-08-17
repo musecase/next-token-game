@@ -13,8 +13,10 @@ const CANDIDATE_POOL = 96;
 
 type LoadMessage = {
   type: "load";
+  mode?: "answer" | "steer";
   question: string;
   factPacket: string[];
+  target?: string;
 };
 
 type ChooseMessage = {
@@ -140,7 +142,12 @@ async function runModel(inputIds: any, attentionMask: any) {
   return choices;
 }
 
-async function loadAndPrefill(question: string, factPacket: string[]) {
+async function loadAndPrefill(
+  question: string,
+  factPacket: string[],
+  mode: "answer" | "steer" = "answer",
+  target?: string,
+) {
   if (cache) {
     await cache.dispose();
     cache = null;
@@ -171,19 +178,29 @@ async function loadAndPrefill(question: string, factPacket: string[]) {
     modelLoadMs = performance.now() - loadStarted;
   }
 
-  send({ type: "status", label: "Giving the model its fact packet…" });
+  send({ type: "status", label: mode === "steer" ? "Setting the starting distribution…" : "Giving the model its fact packet…" });
+  const messages = mode === "steer"
+    ? [
+        {
+          role: "system",
+          content:
+            "Answer the question naturally and directly. You may use relevant comparisons or associations. Output the answer only.",
+        },
+        { role: "user", content: question },
+      ]
+    : [
+        {
+          role: "system",
+          content:
+            "Answer briefly and directly. Use only the trusted fact packet. Do not mention the packet. Output the answer only.",
+        },
+        {
+          role: "user",
+          content: `Trusted fact packet:\n${factPacket.map((fact) => `- ${fact}`).join("\n")}\n\nQuestion: ${question}`,
+        },
+      ];
   const prompt = tokenizer.apply_chat_template(
-    [
-      {
-        role: "system",
-        content:
-          "Answer briefly and directly. Use only the trusted fact packet. Do not mention the packet. Output the answer only.",
-      },
-      {
-        role: "user",
-        content: `Trusted fact packet:\n${factPacket.map((fact) => `- ${fact}`).join("\n")}\n\nQuestion: ${question}`,
-      },
-    ],
+    messages,
     {
       add_generation_prompt: true,
       return_dict: true,
@@ -196,7 +213,7 @@ async function loadAndPrefill(question: string, factPacket: string[]) {
   const choices = await runModel(prompt.input_ids, prompt.attention_mask);
   const prefillMs = performance.now() - prefillStarted;
 
-  send({ type: "ready", choices, modelLoadMs, prefillMs, model: "Qwen3 0.6B · q4f16" });
+  send({ type: "ready", choices, modelLoadMs, prefillMs, model: "Qwen3 0.6B · q4f16", target });
 }
 
 async function chooseToken(tokenId: number) {
@@ -215,7 +232,7 @@ async function chooseToken(tokenId: number) {
 self.onmessage = async (event: MessageEvent<IncomingMessage>) => {
   try {
     if (event.data.type === "load") {
-      await loadAndPrefill(event.data.question, event.data.factPacket);
+      await loadAndPrefill(event.data.question, event.data.factPacket, event.data.mode, event.data.target);
     } else if (event.data.type === "choose") {
       await chooseToken(event.data.tokenId);
     } else if (event.data.type === "dispose") {
