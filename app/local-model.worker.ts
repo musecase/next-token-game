@@ -44,8 +44,11 @@ function friendlyError(error: unknown) {
   if (/memory|allocation|buffer|device lost/i.test(message)) {
     return "The browser ran out of working room for this model. Close a few tabs or try a computer with more memory.";
   }
+  if (/shader.?f16|requires f16|does not support (?:it|f16)/i.test(message)) {
+    return "This browser's current graphics setup does not support the local model. Chrome or Edge may work; the instant demo is still available.";
+  }
   if (/webgpu|gpu|adapter/i.test(message)) {
-    return "WebGPU could not start on this browser or device. Current Chrome or Edge is the safest first try; newer phones can work too.";
+    return "The local model could not start with this browser's graphics support. Chrome or Edge may work; the instant demo is still available.";
   }
   return message || "The local model could not start.";
 }
