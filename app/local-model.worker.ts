@@ -31,12 +31,32 @@ type RankedLogit = { id: number; logit: number };
 let tokenizer: any = null;
 let model: any = null;
 let cache: any = null;
+let modelDtype: "q4f16" | "q4" = "q4f16";
 
 env.allowLocalModels = false;
 env.useBrowserCache = true;
 
 function send(message: Record<string, unknown>) {
   self.postMessage(message);
+}
+
+async function chooseModelDtype(): Promise<"q4f16" | "q4"> {
+  const browserNavigator = self.navigator as Navigator & {
+    gpu?: {
+      requestAdapter: () => Promise<{
+        features?: { has: (feature: string) => boolean };
+      } | null>;
+    };
+  };
+
+  if (!browserNavigator.gpu) return "q4";
+
+  try {
+    const adapter = await browserNavigator.gpu.requestAdapter();
+    return adapter?.features?.has("shader-f16") ? "q4f16" : "q4";
+  } catch {
+    return "q4";
+  }
 }
 
 function friendlyError(error: unknown) {
@@ -163,11 +183,18 @@ async function loadAndPrefill(
 
   let modelLoadMs = 0;
   if (!model) {
-    send({ type: "status", label: "Downloading the 570 MB model…" });
+    send({ type: "status", label: "Checking graphics compatibility…" });
+    modelDtype = await chooseModelDtype();
+    send({
+      type: "status",
+      label: modelDtype === "q4f16"
+        ? "Downloading the 570 MB model…"
+        : "Downloading a compatible local model…",
+    });
     const loadStarted = performance.now();
     model = await AutoModelForCausalLM.from_pretrained(MODEL_ID, {
       device: "webgpu",
-      dtype: "q4f16",
+      dtype: modelDtype,
       progress_callback: (progress: any) => {
         if (progress.status !== "progress_total") return;
         send({
@@ -216,7 +243,7 @@ async function loadAndPrefill(
   const choices = await runModel(prompt.input_ids, prompt.attention_mask);
   const prefillMs = performance.now() - prefillStarted;
 
-  send({ type: "ready", choices, modelLoadMs, prefillMs, model: "Qwen3 0.6B · q4f16", target });
+  send({ type: "ready", choices, modelLoadMs, prefillMs, model: `Qwen3 0.6B · ${modelDtype}`, target });
 }
 
 async function chooseToken(tokenId: number) {
