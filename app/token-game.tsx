@@ -591,14 +591,13 @@ export default function TokenGame() {
               <div className="intro-copy">
                 <p className="eyebrow"><span aria-hidden="true">&gt;_</span> Human inference emulator</p>
                 <h1 className="game-title" aria-label="Token Tumble">
-                  <span className="title-word">Token</span>
-                  <span className="ascii-separator" aria-hidden="true">_</span>
-                  <span className="title-word title-word-accent">Tumble</span>
-                  <span className="ascii-terminal" aria-hidden="true">
-                    <span className="ascii-cap">+--[ token_tumble.exe ]-----+</span>
-                    <span className="ascii-title-row"><i>| &gt;</i><b>TOKEN_</b><i>|</i></span>
-                    <span className="ascii-title-row ascii-title-accent"><i>| &gt;</i><b>TUMBLE</b><i>|</i></span>
-                    <span className="ascii-cap">+----------------------------+</span>
+                  <span className="token-title-mark" aria-hidden="true">
+                    <span className="token-title-row">
+                      <span>T</span><span>O</span><span>K</span><span>E</span><span>N</span>
+                    </span>
+                    <span className="tumble-title-row">
+                      <span>T</span><span>U</span><span>M</span><span>B</span><span>L</span><span>E</span>
+                    </span>
                   </span>
                 </h1>
                 <p className="eyebrow model-role"><span aria-hidden="true">&gt;_</span> You are the model</p>
