@@ -1376,6 +1376,12 @@ h1, h2, p { margin-top: 0; }
   gap: clamp(7px, 1vw, 12px);
   margin: 0 auto;
 }
+.skin-cli .game-title .token-title-mark,
+.skin-cli .game-title .token-title-mark span {
+  margin-left: 0;
+  letter-spacing: inherit;
+  -webkit-text-stroke: 0;
+}
 .skin-cli .token-title-row { display: flex; gap: clamp(4px, .7vw, 7px); }
 .skin-cli .token-title-row > span {
   width: clamp(43px, 7vw, 68px);
@@ -1403,7 +1409,7 @@ h1, h2, p { margin-top: 0; }
   letter-spacing: -.07em;
   line-height: 1;
 }
-.skin-cli .tumble-title-row > span { display: inline-block; }
+.skin-cli .tumble-title-row > span { display: inline-block; color: #ffffff; }
 .skin-cli .tumble-title-row > span:nth-child(1) { color: #ffff55; opacity: 1; text-shadow: 0 0 7px rgba(255,255,85,.42); }
 .skin-cli .tumble-title-row > span:nth-child(2) { font-size: .94em; opacity: .96; text-shadow: 0 0 5px rgba(255,255,255,.3); }
 .skin-cli .tumble-title-row > span:nth-child(3) { font-size: .88em; opacity: .9; }
