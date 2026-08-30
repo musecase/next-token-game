@@ -334,15 +334,14 @@ export default function DailySteer({ onExit }: Props) {
 
   if (phase === "won") {
     const score = tokens.length;
+    const bestScore = best ?? score;
     return (
       <div className="result-panel steer-result">
-        <p className="eyebrow">Target acquired</p>
-        <h1>You got there.</h1>
-        <div className="steer-scoreline">
-          <div><span>TARGET</span><strong>{puzzle.target}</strong></div>
-          <div><span>THIS PATH</span><strong>{score} TOKENS</strong></div>
-          <div><span>YOUR BEST</span><strong>{best ?? score} TOKENS</strong></div>
-        </div>
+        <header className="steer-result-summary">
+          <span>Target · {puzzle.target}</span>
+          <strong>{score} tokens</strong>
+          <small>{bestScore === score ? "Personal best" : `Best · ${bestScore} tokens`}</small>
+        </header>
         <article className="answer-card player-card steer-path-card">
           <div className="answer-card-heading"><span>YOUR PATH</span><span className="answer-chip">ATTEMPT {attempts}</span></div>
           <p>{answer}</p>
@@ -350,7 +349,7 @@ export default function DailySteer({ onExit }: Props) {
         {activeBoardDate ? <ArcadeLeaderboard date={activeBoardDate} puzzleId={puzzle.id} score={score} /> : null}
         <div className="result-actions">
           <button className="primary-button" onClick={() => loadPuzzle(true)}>TRY A SHORTER PATH</button>
-          <button className="text-button" onClick={() => setPhase("menu")}>BACK TO THE ARCHIVE</button>
+          <button className="text-button" onClick={() => setPhase("menu")}>BACK</button>
         </div>
       </div>
     );
