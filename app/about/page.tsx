@@ -19,9 +19,7 @@ export default function AboutPage() {
 
       <article className="explainer-shell">
         <header className="explainer-hero">
-          <p className="eyebrow">How the machine talks</p>
-          <h1>WHAT IS THIS?</h1>
-          <p className="lede">Token Tumble puts you inside the repeating prediction loop of a language model.</p>
+          <h1>Token Tumble puts you inside the repeating prediction loop of a language model.</h1>
         </header>
 
         <section className="explainer-card">
