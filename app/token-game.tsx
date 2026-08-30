@@ -573,10 +573,10 @@ export default function TokenGame() {
   return (
     <main className="game-shell skin-cli">
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="Token Tumble home">
+        <button className="brand brand-button" type="button" onClick={() => setMode("intro")} aria-label="Token Tumble home">
           <span className="brand-mark">T</span>
           <span>TOKEN TUMBLE</span>
-        </a>
+        </button>
         <div className="topbar-tools">
           <div className="prototype-badge">
             <span className="status-dot" /> {mode === "steer" ? "daily_steer: live" : "model_status: playable"}
