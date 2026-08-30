@@ -362,7 +362,7 @@ export default function DailySteer({ onExit }: Props) {
     <div className="play-panel local-play steer-play">
       <div className="steer-play-heading">
         <div><span className="prompt-role">user:</span><h2>{puzzle.question}</h2></div>
-        <div className="steer-target-live"><span>TARGET</span><strong>{puzzle.target}</strong></div>
+        <div className="steer-target-live"><span>TARGET TOKEN</span><strong>{puzzle.target}</strong></div>
       </div>
       <div className="response-block">
         <span className="prompt-role assistant-role">assistant:</span>

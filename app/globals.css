@@ -1663,6 +1663,26 @@ h1, h2, p { margin-top: 0; }
   background: #111733;
 }
 .skin-cli .steer-card-target { border: 1px solid rgba(255,255,85,.3); border-left-width: 3px; border-radius: 7px; background: #101630; }
+.skin-cli .steer-target-live {
+  min-width: 150px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,85,.3);
+  border-left-width: 3px;
+  border-radius: 7px;
+  background: #101630;
+  text-align: left;
+}
+.skin-cli .steer-target-live span {
+  margin-bottom: 5px;
+  color: #55ffff;
+  font-size: 11px;
+}
+.skin-cli .steer-target-live strong {
+  color: #ffff55;
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 550;
+}
 .skin-cli .arcade-board { border: 1px solid var(--line); border-radius: 12px; background: #040507; box-shadow: none; }
 .skin-cli .arcade-name-form button { color: #050609; }
 .skin-cli .arcade-name-form button:disabled {
