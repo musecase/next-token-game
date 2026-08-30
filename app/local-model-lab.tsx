@@ -20,6 +20,7 @@ type Props = {
   factPacket: string[];
   preparedInCloud: boolean;
   onExit: () => void;
+  onInstantDemo: () => void;
 };
 
 const CLOUD_X = [-8, 7, -2, 10, 3, -10, 8, -4, 11, -7, 4, -1];
@@ -47,7 +48,7 @@ function formatTime(milliseconds: number) {
   return `${(milliseconds / 1000).toFixed(1)} sec`;
 }
 
-export default function LocalModelLab({ question, reference, factPacket, preparedInCloud, onExit }: Props) {
+export default function LocalModelLab({ question, reference, factPacket, preparedInCloud, onExit, onInstantDemo }: Props) {
   const workerRef = useRef<Worker | null>(null);
   const [phase, setPhase] = useState<Phase>("permission");
   const [status, setStatus] = useState("Waiting to begin");
@@ -175,7 +176,8 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
         </div>
         <div className="result-actions">
           <button className="primary-button" onClick={begin}>DOWNLOAD &amp; TRY IT</button>
-          <button className="text-button" onClick={onExit}>NOT RIGHT NOW</button>
+          <button className="lab-button" onClick={onInstantDemo}>TRY THE MODELESS DEMO</button>
+          <button className="text-button" onClick={onExit}>CHOOSE ANOTHER QUESTION</button>
         </div>
       </div>
     );
@@ -203,7 +205,10 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
         <p className="eyebrow">The experiment stopped</p>
         <h1>Local model unavailable here.</h1>
         <p className="lede">{error}</p>
-        <button className="primary-button" onClick={onExit}>BACK TO THE PLAYABLE VERSION</button>
+        <div className="result-actions">
+          <button className="primary-button" onClick={onInstantDemo}>TRY THE MODELESS DEMO</button>
+          <button className="text-button" onClick={onExit}>CHOOSE ANOTHER QUESTION</button>
+        </div>
       </div>
     );
   }
