@@ -641,7 +641,7 @@ export default function TokenGame() {
                     aria-label={customQuestions === "ready" ? "Prepare this question" : undefined}
                     className="primary-button"
                     type="submit"
-                    disabled={customQuestions !== "ready"}
+                    disabled={customQuestions !== "ready" || questionDraft.replace(/\s+/g, " ").trim().length < 8}
                   >
                     {customQuestions === "ready" ? "USE THIS QUESTION →" : customQuestions === "checking" ? "CHECKING…" : "UNAVAILABLE"}
                   </button>

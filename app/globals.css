@@ -1271,12 +1271,13 @@ h1, h2, p { margin-top: 0; }
 .skin-cli .brand-mark {
   width: 31px;
   height: 31px;
-  border: 1px solid #2638c4;
+  border: 1px solid rgba(85,255,255,.55);
+  border-left-color: rgba(255,255,85,.65);
   border-radius: 3px;
-  background: #101cab;
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(64, 88, 232, .18);
-  text-shadow: 0 0 5px rgba(255, 255, 255, .45);
+  background: #101630;
+  color: #ffff55;
+  box-shadow: 0 0 10px rgba(85,255,255,.12);
+  text-shadow: 0 0 5px rgba(255,255,85,.32);
 }
 
 .skin-cli .game-stage {
@@ -1417,7 +1418,7 @@ h1, h2, p { margin-top: 0; }
 .skin-cli .console-header i { background: #55ffff; box-shadow: 0 0 7px rgba(85,255,255,.5); }
 .skin-cli .mode-panel .question-card { padding: clamp(24px, 4vw, 34px); background: transparent; }
 .skin-cli .prompt-role { margin-bottom: 11px; color: #75dfe8; }
-.skin-cli .assistant-role { color: #9af3c3; }
+.skin-cli .assistant-role { color: #75dfe8; }
 .skin-cli .prompt-entry {
   padding: 16px 18px;
   border: 1px solid #222c3b;
@@ -1425,7 +1426,7 @@ h1, h2, p { margin-top: 0; }
   background: #05070a;
 }
 .skin-cli .prompt-entry > span { color: #ffff55; }
-.skin-cli .question-form .prompt-entry textarea { color: #f3f5f8; caret-color: #55ffff; }
+.skin-cli .question-form .prompt-entry textarea { color: #f3f5f8; caret-color: #ffff55; }
 .skin-cli .question-form textarea::placeholder { color: #626b78; }
 .skin-cli .question-form-footer { margin-top: 18px; }
 .skin-cli .question-form-footer > span { color: #687382; }
