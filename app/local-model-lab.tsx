@@ -215,11 +215,11 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
       <div className="result-panel local-result">
         <header className="emulator-result-heading">
           <h1>Inference Emulator</h1>
-          <p>Qwen3 0.6B · {tokens.length} tokens</p>
+          <p>Qwen3 0.6B · {tokens.length} {tokens.length === 1 ? "token" : "tokens"}</p>
         </header>
         <div className="comparison-grid">
           <article className="answer-card player-card">
-            <div className="answer-card-heading"><span>YOUR RUN</span><span className="answer-chip">{tokens.length} TOKENS</span></div>
+            <div className="answer-card-heading"><span>YOUR RUN</span><span className="answer-chip">{tokens.length} {tokens.length === 1 ? "TOKEN" : "TOKENS"}</span></div>
             <p>{answer || "No answer escaped the model."}</p>
           </article>
           <article className="answer-card reference-card">

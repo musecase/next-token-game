@@ -785,14 +785,14 @@ export default function TokenGame() {
           <div className="result-panel">
             <header className="emulator-result-heading">
               <h1>Inference Emulator</h1>
-              <p>Instant demo · {tokens.length} tokens</p>
+              <p>Instant demo · {tokens.length} {tokens.length === 1 ? "token" : "tokens"}</p>
             </header>
 
             <div className="comparison-grid">
               <article className="answer-card player-card">
                 <div className="answer-card-heading">
                   <span>YOUR RUN</span>
-                  <span className="answer-chip">{tokens.length} TOKENS</span>
+                  <span className="answer-chip">{tokens.length} {tokens.length === 1 ? "TOKEN" : "TOKENS"}</span>
                 </div>
                 <p>{answer || "No answer escaped the model."}</p>
               </article>

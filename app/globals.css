@@ -1841,6 +1841,7 @@ h1, h2, p { margin-top: 0; }
   font-weight: 600;
   line-height: 1.04;
   letter-spacing: -.055em;
+  text-transform: none;
 }
 .skin-cli .emulator-result-heading p {
   margin: 0;
