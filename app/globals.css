@@ -1178,7 +1178,7 @@ h1, h2, p { margin-top: 0; }
 @keyframes cloud-in { from { opacity: 0; filter: blur(2px); } }
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes pulse { to { transform: scale(1.04); } }
-@keyframes prepare-pulse { 35% { background: var(--acid); color: var(--ink); } }
+@keyframes prepare-pulse { 35% { background: var(--acid); color: #050609; } }
 
 @media (max-width: 900px) {
   .intro-layout { gap: 34px; }
@@ -1896,6 +1896,23 @@ h1, h2, p { margin-top: 0; }
 .skin-cli .emulator-back { display: block; margin: 28px auto 0; color: #75dfe8; }
 .skin-cli :is(.local-permission, .local-error) .result-actions { flex-wrap: wrap; }
 .skin-cli :is(.local-permission, .local-error) .result-actions .lab-button { margin: 0; }
+.skin-cli .local-permission { font-family: var(--font-copy); }
+.skin-cli .local-permission > .eyebrow { margin-bottom: 18px; }
+.skin-cli .local-permission > .lede {
+  width: min(620px, 100%);
+  margin: 0 auto 28px;
+  color: #bfc8d4;
+  font-family: var(--font-copy);
+  font-size: clamp(17px, 2.2vw, 20px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.025em;
+}
+.skin-cli .local-permission .local-warning { font-family: var(--font-copy); font-size: 14px; }
+.skin-cli .local-permission .local-warning strong { font-family: var(--font-mono); font-size: 12px; }
+.skin-cli .preparing-panel { width: min(680px, 100%); font-family: var(--font-copy); }
+.skin-cli .preparing-panel > .eyebrow { margin: 0 0 24px; font-size: 12px; }
+.skin-cli .preparing-step { color: #7f8a99; font-family: var(--font-mono); font-size: 11px; }
 
 @media (max-width: 700px) {
   .skin-cli .intro-panel { width: 100%; }

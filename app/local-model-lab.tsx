@@ -160,22 +160,21 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
   if (phase === "permission") {
     return (
       <div className="local-permission">
-        <p className="eyebrow">Local-model lab</p>
-        <h1>The real distribution.</h1>
+        <p className="eyebrow">Local model</p>
         <p className="lede">
           {preparedInCloud
-            ? "One cloud call prepared the factual path. From here on, every token choice runs on your device."
-            : "This ready-made round runs a small language model on your own device. No question leaves your browser."}
+            ? "Your question is prepared. Token choices now run on this device."
+            : "A small language model will run on this device. This question stays in your browser."}
         </p>
         <div className="local-warning">
-          <strong>FIRST LOAD: ABOUT 570 MB</strong>
-          <span>It should be cached by your browser for later runs.</span>
-          <span>Chrome or Edge recommended · newer phones can work · experimental</span>
+          <strong>THE FIRST GAME TAKES A MOMENT</strong>
+          <span>The model is saved for later games.</span>
+          <span>Chrome or Edge works best.</span>
         </div>
         <div className="result-actions">
-          <button className="primary-button" onClick={begin}>DOWNLOAD &amp; TRY IT</button>
-          <button className="lab-button" onClick={onInstantDemo}>TRY THE MODELESS DEMO</button>
-          <button className="text-button" onClick={onExit}>CHOOSE ANOTHER QUESTION</button>
+          <button className="primary-button" onClick={begin}>LOAD THE MODEL</button>
+          <button className="lab-button" onClick={onInstantDemo}>USE MODELESS DEMO</button>
+          <button className="text-button" onClick={onExit}>BACK</button>
         </div>
       </div>
     );

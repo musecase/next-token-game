@@ -636,7 +636,7 @@ export default function TokenGame() {
                   />
                 </div>
                 <div className="question-form-footer">
-                  <span>{questionDraft.length}/220 chars</span>
+                  <span>8-character minimum · {questionDraft.length}/220</span>
                   <button
                     aria-label={customQuestions === "ready" ? "Prepare this question" : undefined}
                     className="primary-button"
@@ -671,10 +671,8 @@ export default function TokenGame() {
 
         {mode === "preparing" && (
           <div className="preparing-panel" aria-live="polite">
-            <p className="eyebrow">Borrowing a little thinking</p>
-            <h1>Loading the facts.</h1>
-            <p className="lede">A stronger model is building the factual path. Then the fast little model takes over on your device.</p>
-            <div className="preparing-steps" aria-hidden="true">
+            <p className="eyebrow">Preparing your question</p>
+            <div className="preparing-steps">
               <span className="preparing-step preparing-step-active">CHECK QUESTION</span>
               <span className="preparing-step">PACK FACTS</span>
               <span className="preparing-step">START MODEL</span>
