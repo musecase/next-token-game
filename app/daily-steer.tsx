@@ -240,9 +240,7 @@ export default function DailySteer({ onExit }: Props) {
     const isToday = viewDate === today;
     return (
       <div className="steer-menu">
-        <p className="eyebrow">Three daily token puzzles</p>
-        <h1>Steer the model.</h1>
-        <p className="lede">Win any one to complete the day. Play all three if the model has offended your honor.</p>
+        <h1 className="steer-instruction">You are the LLM: How quickly can you steer your output to the target token?</h1>
 
         <section className="steer-daily-card">
           <div className="steer-daily-heading">
@@ -250,21 +248,17 @@ export default function DailySteer({ onExit }: Props) {
               <span className="card-label">{isToday ? "TODAY" : "ARCHIVE"} · {displayDate(viewDate)}</span>
               <h2>{isToday ? "Daily Three" : "Past Daily Three"}</h2>
             </div>
-            <div className="steer-daily-progress">
-              <span>{dailyWins.length > 0 ? "DAY COMPLETE" : "WIN ONE TO COMPLETE"}</span>
-              <strong>{dailyWins.length}/3</strong>
-            </div>
           </div>
           <div className="steer-daily-grid">
-            {selectedSet.puzzles.map((item, index) => {
+            {selectedSet.puzzles.map((item) => {
               const won = dailyWins.includes(item.id);
               return (
                 <article className={`steer-daily-puzzle ${won ? "steer-daily-puzzle-won" : ""}`} key={item.id}>
-                  <span>PUZZLE {index + 1} · {item.difficulty}</span>
+                  <span>{item.difficulty}</span>
                   <h3>{item.question}</h3>
                   <div className="steer-card-target"><small>TARGET TOKEN</small><strong>{item.target}</strong></div>
                   <button className="primary-button" onClick={() => selectPuzzle(item, viewDate)}>
-                    {won ? "PLAY AGAIN" : "PLAY THIS STEER"} →
+                    {won ? "PLAY AGAIN" : "PLAY"}
                   </button>
                 </article>
               );
@@ -293,7 +287,6 @@ export default function DailySteer({ onExit }: Props) {
           <button className="lab-button" type="submit">LOAD THAT DAY</button>
           {!isToday ? <button className="text-button" type="button" onClick={() => openDate(today)}>BACK TO TODAY</button> : null}
         </form>
-        <button className="text-button steer-back" onClick={onExit}>BACK TO THE ORIGINAL GAME</button>
       </div>
     );
   }
