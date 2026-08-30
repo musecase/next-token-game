@@ -59,6 +59,7 @@ button { font: inherit; }
   letter-spacing: 0.08em;
   text-decoration: none;
 }
+.brand-button { padding: 0; border: 0; background: transparent; cursor: pointer; }
 
 .brand-mark {
   width: 34px;
@@ -1609,6 +1610,16 @@ h1, h2, p { margin-top: 0; }
 .skin-cli .steer-daily-card { padding: clamp(26px, 4vw, 40px); border-top: 1px solid var(--line); background: #080b10; }
 .skin-cli .steer-daily-heading { padding-bottom: 22px; border-color: var(--quiet-line); }
 .skin-cli .steer-daily-heading h2 { font-family: var(--font-ui); }
+.skin-cli .steer-instruction {
+  max-width: 790px;
+  margin: 0 auto 42px;
+  color: #d7dee8;
+  font-family: var(--font-ui);
+  font-size: clamp(24px, 4vw, 42px);
+  font-weight: 520;
+  line-height: 1.14;
+  letter-spacing: -.035em;
+}
 .skin-cli .steer-daily-puzzle { background: #0c1017; }
 .skin-cli .steer-daily-puzzle:hover { border-color: rgba(85,255,255,.34); background: #101722; }
 .skin-cli .steer-daily-puzzle-won { border-color: rgba(112,255,174,.4); background: #0b2118; }
@@ -1622,9 +1633,22 @@ h1, h2, p { margin-top: 0; }
 .skin-cli .steer-card-target { border: 1px solid rgba(255,255,85,.3); border-left-width: 3px; border-radius: 7px; background: #101630; }
 .skin-cli .arcade-board { border: 1px solid var(--line); border-radius: 12px; background: #040507; box-shadow: none; }
 
+.skin-cli.explainer-page {
+  --font-reading: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+}
 .skin-cli .explainer-shell { width: min(820px, calc(100% - 48px)); }
 .skin-cli .explainer-hero { margin-bottom: 48px; }
-.skin-cli .explainer-hero h1 { color: #f4f6fb; font-family: var(--font-ui); text-transform: none; }
+.skin-cli .explainer-hero h1 {
+  max-width: 760px;
+  margin: 0;
+  color: #edf0f5;
+  font-family: var(--font-reading);
+  font-size: clamp(36px, 6.4vw, 64px);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -.035em;
+  text-transform: none;
+}
 .skin-cli .explainer-card {
   margin-bottom: 14px;
   border: 1px solid var(--line);
@@ -1632,8 +1656,20 @@ h1, h2, p { margin-top: 0; }
   background: #0a0d12;
 }
 .skin-cli .explainer-card:first-of-type { border-top: 1px solid var(--line); }
-.skin-cli .explainer-card h2 { font-family: var(--font-ui); }
-.skin-cli .explainer-card p { color: #b7c0cc; font-family: var(--font-ui); }
+.skin-cli .explainer-card h2 {
+  color: #e8edf4;
+  font-family: var(--font-mono);
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+.skin-cli .explainer-card p {
+  color: #bdc5d1;
+  font-family: var(--font-reading);
+  font-size: 18px;
+  line-height: 1.62;
+}
+.skin-cli .notice-panel li { font-family: var(--font-reading); font-size: 17px; line-height: 1.55; }
 .skin-cli .notice-panel { border: 1px solid rgba(255,255,85,.28); border-radius: 12px; background: #0d132b; }
 
 @media (max-width: 700px) {
