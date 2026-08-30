@@ -238,7 +238,10 @@ export default function DailySteer({ onExit }: Props) {
     const isToday = viewDate === today;
     return (
       <div className="steer-menu">
-        <h1 className="steer-instruction">You are the LLM: How quickly can you steer your output to the target token?</h1>
+        <header className="steer-intro">
+          <h1>You are the LLM</h1>
+          <p>How quickly can you steer your output to the target token?</p>
+        </header>
 
         <section className="steer-daily-card">
           <div className="steer-daily-heading">

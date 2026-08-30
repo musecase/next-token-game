@@ -17,10 +17,6 @@ export default function AboutPage() {
       </header>
 
       <article className="explainer-shell">
-        <header className="explainer-hero">
-          <h1>Token Tumble lets you choose what a language model says next.</h1>
-        </header>
-
         <section className="explainer-card">
           <div>
             <h2>Tokens are pieces of text.</h2>

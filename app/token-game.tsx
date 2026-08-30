@@ -614,15 +614,13 @@ export default function TokenGame() {
         {mode === "emulator" && (
           <div className="emulator-menu">
             <header className="emulator-heading">
-              <p className="eyebrow">Inference emulator</p>
-              <h1>Choose a question.</h1>
-              <p className="lede">Bring your own, or start with one whose factual path is ready.</p>
+              <h1>Inference Emulator</h1>
+              <p className="lede">Choose a ready-made question or ask your own.</p>
             </header>
 
             <section className="mode-panel emulator-panel" aria-labelledby="emulator-panel-title">
               <div className="console-header">
                 <span className="section-kicker" id="emulator-panel-title">Ask your own</span>
-                <span><i aria-hidden="true" /> {customQuestions === "ready" ? "ready" : customQuestions}</span>
               </div>
               <form className="question-card question-form" onSubmit={prepareCustomRound}>
                 <label className="prompt-role" htmlFor="custom-question">user:</label>
@@ -785,8 +783,10 @@ export default function TokenGame() {
 
         {mode === "result" && (
           <div className="result-panel">
-            <p className="eyebrow">The distribution has spoken</p>
-            <h1>How did your model do?</h1>
+            <header className="emulator-result-heading">
+              <h1>Inference Emulator</h1>
+              <p>Instant demo · {tokens.length} tokens</p>
+            </header>
 
             <div className="comparison-grid">
               <article className="answer-card player-card">
@@ -799,7 +799,6 @@ export default function TokenGame() {
               <article className="answer-card reference-card">
                 <div className="answer-card-heading">
                   <span>REFERENCE ANSWER</span>
-                  <span className="answer-chip answer-chip-green">FACT PACKET</span>
                 </div>
                 <p>{REFERENCE}</p>
               </article>

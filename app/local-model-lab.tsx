@@ -213,15 +213,17 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
     const greedyPull = tokens.length ? (greedyPicks / tokens.length) * 100 : 0;
     return (
       <div className="result-panel local-result">
-        <p className="eyebrow">A real 0.6B model made those choices</p>
-        <h1>How did it feel?</h1>
+        <header className="emulator-result-heading">
+          <h1>Inference Emulator</h1>
+          <p>Qwen3 0.6B · {tokens.length} tokens</p>
+        </header>
         <div className="comparison-grid">
           <article className="answer-card player-card">
             <div className="answer-card-heading"><span>YOUR RUN</span><span className="answer-chip">{tokens.length} TOKENS</span></div>
             <p>{answer || "No answer escaped the model."}</p>
           </article>
           <article className="answer-card reference-card">
-            <div className="answer-card-heading"><span>REFERENCE ANSWER</span><span className="answer-chip answer-chip-green">FACT PACKET</span></div>
+            <div className="answer-card-heading"><span>REFERENCE ANSWER</span></div>
             <p>{reference}</p>
           </article>
         </div>

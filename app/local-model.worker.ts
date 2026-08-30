@@ -208,7 +208,7 @@ async function loadAndPrefill(
     modelLoadMs = performance.now() - loadStarted;
   }
 
-  send({ type: "status", label: mode === "steer" ? "Setting the starting distribution…" : "Giving the model its fact packet…" });
+  send({ type: "status", label: mode === "steer" ? "Setting the starting distribution…" : "Setting the context…" });
   const messages = mode === "steer"
     ? [
         {
@@ -222,11 +222,11 @@ async function loadAndPrefill(
         {
           role: "system",
           content:
-            "Answer briefly and directly. Use only the trusted fact packet. Do not mention the packet. Output the answer only.",
+            "Answer the question briefly and directly using only the supplied background. Return only the answer. If the background does not support an answer, say so plainly.",
         },
         {
           role: "user",
-          content: `Trusted fact packet:\n${factPacket.map((fact) => `- ${fact}`).join("\n")}\n\nQuestion: ${question}`,
+          content: `Background:\n${factPacket.map((fact) => `- ${fact}`).join("\n")}\n\nQuestion: ${question}`,
         },
       ];
   const prompt = tokenizer.apply_chat_template(
