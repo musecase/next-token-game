@@ -1660,3 +1660,97 @@ h1, h2, p { margin-top: 0; }
   .skin-cli .meters { grid-template-columns: 1fr; }
   .skin-cli .explainer-shell { width: min(100% - 28px, 620px); }
 }
+
+/* Start screen: one mark, one identity line, three real choices. */
+.skin-cli .intro-panel { width: min(680px, 100%); }
+.skin-cli .intro-panel .game-title { margin-top: 0; }
+.skin-cli .intro-copy .model-role {
+  margin: 0 0 36px;
+  color: #75dfe8;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .08em;
+}
+.skin-cli .home-menu {
+  width: min(520px, 100%);
+  display: grid;
+  gap: 12px;
+}
+.skin-cli .home-choice {
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0 22px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #0a0d12;
+  color: #edf2f8;
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 650;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+.skin-cli .home-choice b { color: #75dfe8; font-family: var(--font-mono); font-size: 16px; }
+.skin-cli .home-choice:hover {
+  border-color: rgba(85, 255, 255, .48);
+  background: #101722;
+  transform: translateY(-1px);
+}
+.skin-cli .home-choice-primary {
+  border-color: rgba(85, 255, 255, .52);
+  background: #10202a;
+}
+.skin-cli .home-choice:focus-visible { outline: 3px solid #55e8f0; outline-offset: 3px; }
+
+/* The simulator and ready-made local rounds now share one destination. */
+.skin-cli .emulator-menu {
+  width: min(820px, 100%);
+  margin: 0 auto;
+  animation: rise 360ms ease-out both;
+}
+.skin-cli .emulator-heading { margin-bottom: 34px; text-align: center; }
+.skin-cli .emulator-heading h1 {
+  margin: 12px 0 16px;
+  color: #f4f6fb;
+  font-family: var(--font-ui);
+  font-size: clamp(40px, 7vw, 68px);
+  font-weight: 720;
+  line-height: .98;
+  letter-spacing: -.055em;
+}
+.skin-cli .emulator-heading .lede { margin-bottom: 0; }
+.skin-cli .emulator-panel .question-card { border-bottom: 0; }
+.skin-cli .emulator-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 20px;
+  color: #7f8a99;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: lowercase;
+}
+.skin-cli .emulator-divider::before,
+.skin-cli .emulator-divider::after { content: ""; height: 1px; flex: 1; background: var(--quiet-line); }
+.skin-cli .emulator-panel .local-round-options { padding: 18px 20px 20px; }
+.skin-cli .emulator-back { display: block; margin: 28px auto 0; color: #75dfe8; }
+.skin-cli :is(.local-permission, .local-error) .result-actions { flex-wrap: wrap; }
+.skin-cli :is(.local-permission, .local-error) .result-actions .lab-button { margin: 0; }
+
+@media (max-width: 700px) {
+  .skin-cli .intro-panel { width: 100%; }
+  .skin-cli .intro-copy .model-role { margin-bottom: 30px; }
+  .skin-cli .home-choice { min-height: 60px; padding-inline: 18px; font-size: 17px; }
+  .skin-cli .emulator-heading { margin-bottom: 26px; }
+  .skin-cli .emulator-panel .local-round-options { padding: 12px; }
+  .skin-cli :is(.local-permission, .local-error) .result-actions { align-items: stretch; flex-direction: column; }
+  .skin-cli :is(.local-permission, .local-error) .result-actions :is(.primary-button, .lab-button, .text-button) { width: 100%; }
+}
