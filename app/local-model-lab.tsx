@@ -53,7 +53,6 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
   const [phase, setPhase] = useState<Phase>("permission");
   const [status, setStatus] = useState("Waiting to begin");
   const [progress, setProgress] = useState(0);
-  const [bytesTotal, setBytesTotal] = useState(570_000_000);
   const [choices, setChoices] = useState<LocalChoice[]>([]);
   const [tokens, setTokens] = useState<string[]>([]);
   const [step, setStep] = useState(0);
@@ -112,7 +111,6 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
       if (message.type === "status") setStatus(message.label);
       if (message.type === "progress") {
         setProgress(message.percent ?? 0);
-        if (message.total) setBytesTotal(message.total);
       }
       if (message.type === "ready") {
         setChoices(message.choices);
@@ -184,16 +182,14 @@ export default function LocalModelLab({ question, reference, factPacket, prepare
   }
 
   if (phase === "loading") {
-    const megabytes = Math.round(bytesTotal / 1_000_000);
     return (
       <div className="local-loading" aria-live="polite">
-        <p className="eyebrow">Local-model lab</p>
-        <h1>Waking up a tiny model.</h1>
-        <p className="lede">{status}</p>
+        <p className="eyebrow">Inference Emulator</p>
+        <p className="loading-status">{status}</p>
         <div className="download-meter">
           <i style={{ width: `${Math.max(2, progress)}%` }} />
         </div>
-        <div className="download-copy"><span>{Math.round(progress)}%</span><span>up to {megabytes} MB</span></div>
+        <div className="download-copy"><span>{Math.round(progress)}%</span></div>
         <p className="tiny-note">Keep this tab open. The first run includes download, unpacking, and GPU warm-up.</p>
       </div>
     );
