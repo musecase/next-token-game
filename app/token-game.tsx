@@ -409,7 +409,7 @@ const READY_MADE_ROUNDS: PreparedRound[] = [
   },
 ];
 
-type Mode = "intro" | "preparing" | "prepareError" | "playing" | "result" | "local" | "steer";
+type Mode = "intro" | "emulator" | "preparing" | "prepareError" | "playing" | "result" | "local" | "steer";
 
 function getChoices(step: number, drift: number) {
   const base = ROUND[step] ?? [];
@@ -589,7 +589,6 @@ export default function TokenGame() {
           <div className="intro-panel">
             <div className="intro-layout">
               <div className="intro-copy">
-                <p className="eyebrow"><span aria-hidden="true">&gt;_</span> Human inference emulator</p>
                 <h1 className="game-title" aria-label="Token Tumble">
                   <span className="token-title-mark" aria-hidden="true">
                     <span className="token-title-row">
@@ -600,91 +599,80 @@ export default function TokenGame() {
                     </span>
                   </span>
                 </h1>
-                <p className="eyebrow model-role"><span aria-hidden="true">&gt;_</span> You are the model</p>
-                <p className="lede">
-                  Answer one token at a time. Large words are likely. Small words are dangerous. Certainty is not included.
-                </p>
-                <Link className="explainer-link" href="/about">
-                  [ what_are_tokens? ] <span aria-hidden="true">→</span>
-                </Link>
-                <div className="daily-launch">
-                  <span className="section-kicker">[ daily_challenge ]</span>
-                  <strong>DAILY STEER</strong>
-                  <button className="primary-button daily-launch-button" type="button" onClick={() => setMode("steer")}>
-                    PLAY TODAY’S THREE <span aria-hidden="true">→</span>
+                <p className="model-role">/model &lt;YOU&gt;</p>
+                <nav className="home-menu" aria-label="Choose how to start">
+                  <Link className="home-choice" href="/about">
+                    <span>What is this?</span><b aria-hidden="true">→</b>
+                  </Link>
+                  <button className="home-choice home-choice-primary" type="button" onClick={() => setMode("steer")}>
+                    <span>Play the game</span><b aria-hidden="true">→</b>
+                  </button>
+                  <button className="home-choice" type="button" onClick={() => setMode("emulator")}>
+                    <span>Inference Emulator</span><b aria-hidden="true">→</b>
+                  </button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {mode === "emulator" && (
+          <div className="emulator-menu">
+            <header className="emulator-heading">
+              <p className="eyebrow">Inference emulator</p>
+              <h1>Choose a question.</h1>
+              <p className="lede">Bring your own, or start with one whose factual path is ready.</p>
+            </header>
+
+            <section className="mode-panel emulator-panel" aria-labelledby="emulator-panel-title">
+              <div className="console-header">
+                <span className="section-kicker" id="emulator-panel-title">Ask your own</span>
+                <span><i aria-hidden="true" /> {customQuestions === "ready" ? "ready" : customQuestions}</span>
+              </div>
+              <form className="question-card question-form" onSubmit={prepareCustomRound}>
+                <label className="prompt-role" htmlFor="custom-question">user:</label>
+                <div className="prompt-entry">
+                  <span aria-hidden="true">&gt;</span>
+                  <textarea
+                    id="custom-question"
+                    value={questionDraft}
+                    onChange={(event) => setQuestionDraft(event.target.value)}
+                    maxLength={220}
+                    rows={3}
+                    placeholder="Why do we dream?"
+                  />
+                </div>
+                <div className="question-form-footer">
+                  <span>{questionDraft.length}/220 chars</span>
+                  <button
+                    aria-label={customQuestions === "ready" ? "Prepare this question" : undefined}
+                    className="primary-button"
+                    type="submit"
+                    disabled={customQuestions !== "ready"}
+                  >
+                    {customQuestions === "ready" ? "USE THIS QUESTION →" : customQuestions === "checking" ? "CHECKING…" : "UNAVAILABLE"}
                   </button>
                 </div>
+              </form>
+
+              <div className="emulator-divider"><span>or choose a ready-made question</span></div>
+              <div className="local-round-options">
+                {READY_MADE_ROUNDS.map((round, index) => (
+                  <button key={round.question} type="button" onClick={() => openReadyMadeLocalRound(round)}>
+                    <small>{String(index + 1).padStart(2, "0")}</small>
+                    <span>{round.question}</span>
+                    <b aria-hidden="true">→</b>
+                  </button>
+                ))}
               </div>
+              <p className="tiny-note">
+                {customQuestions === "off"
+                  ? "Custom questions are offline right now. Ready-made questions still work."
+                  : "Custom questions use one cloud call to prepare facts. Token choices run on your device."}
+              </p>
+            </section>
 
-              <div className="mode-stack">
-                <section className="mode-panel simulator-panel" aria-labelledby="simulator-panel-title">
-                  <div className="console-header">
-                    <span className="section-kicker" id="simulator-panel-title">[ simulator ]</span>
-                    <span><i aria-hidden="true" /> [ ready ]</span>
-                  </div>
-                  <form className="question-card question-form" onSubmit={prepareCustomRound}>
-                    <label className="prompt-role" htmlFor="custom-question">user:</label>
-                    <div className="prompt-entry">
-                      <span aria-hidden="true">&gt;</span>
-                      <textarea
-                        id="custom-question"
-                        value={questionDraft}
-                        onChange={(event) => setQuestionDraft(event.target.value)}
-                        maxLength={220}
-                        rows={3}
-                        placeholder="Why do we dream?"
-                      />
-                    </div>
-                    <div className="question-form-footer">
-                      <span>{questionDraft.length}/220 chars</span>
-                      <button
-                        aria-label={customQuestions === "ready" ? "Start the assistant response" : undefined}
-                        className="primary-button"
-                        type="submit"
-                        disabled={customQuestions !== "ready"}
-                      >
-                        {customQuestions === "ready" ? "assistant:" : customQuestions === "checking" ? "assistant: checking…" : "assistant: unavailable"}
-                      </button>
-                    </div>
-                  </form>
-                  <p className="tiny-note">
-                    {customQuestions === "off"
-                      ? "Custom input is offline until the server key is connected. The other modes work now."
-                      : "Facts prepared in the cloud · token choices run on your device"}
-                  </p>
-                </section>
-
-                <section className="mode-panel local-round-panel" aria-labelledby="local-round-panel-title">
-                  <div className="console-header">
-                    <span className="section-kicker" id="local-round-panel-title">[ local_model ]</span>
-                    <span>[ 570 MB · once ]</span>
-                  </div>
-                  <div className="local-round-options">
-                    {READY_MADE_ROUNDS.map((round, index) => (
-                      <button key={round.question} type="button" onClick={() => openReadyMadeLocalRound(round)}>
-                        <small>{String(index + 1).padStart(2, "0")}</small>
-                        <span>{round.question}</span>
-                        <b aria-hidden="true">→</b>
-                      </button>
-                    ))}
-                  </div>
-                </section>
-
-                <section className="mode-panel instant-demo-panel" aria-labelledby="instant-demo-panel-title">
-                  <div className="console-header">
-                    <span className="section-kicker" id="instant-demo-panel-title">[ instant_demo ]</span>
-                    <span>[ no download ]</span>
-                  </div>
-                  <div className="instant-demo-body">
-                    <p>Curated token probabilities. Starts immediately.</p>
-                    <button className="lab-button" type="button" onClick={startRound}>
-                      PLAY DEMO <b className="action-arrow" aria-hidden="true">→</b>
-                    </button>
-                  </div>
-                </section>
-              </div>
-
-            </div>
+            <button className="text-button emulator-back" type="button" onClick={() => setMode("intro")}>← BACK TO START</button>
           </div>
         )}
 
@@ -707,7 +695,7 @@ export default function TokenGame() {
             <h1>The facts didn’t load.</h1>
             <p className="lede">{prepareError}</p>
             <div className="result-actions">
-              <button className="primary-button" onClick={() => setMode("intro")}>TRY ANOTHER QUESTION</button>
+              <button className="primary-button" onClick={() => setMode("emulator")}>TRY ANOTHER QUESTION</button>
               <button className="text-button" onClick={() => openReadyMadeLocalRound(READY_MADE_ROUNDS[0])}>PLAY THE READY-MADE ROUND</button>
             </div>
           </div>
@@ -719,7 +707,8 @@ export default function TokenGame() {
             reference={preparedRound.reference}
             factPacket={preparedRound.factPacket}
             preparedInCloud={preparedInCloud}
-            onExit={() => setMode("intro")}
+            onExit={() => setMode("emulator")}
+            onInstantDemo={startRound}
           />
         )}
 
