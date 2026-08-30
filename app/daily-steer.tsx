@@ -294,16 +294,12 @@ export default function DailySteer({ onExit }: Props) {
   if (phase === "permission") {
     return (
       <div className="local-permission steer-permission">
-        <p className="eyebrow">{activeBoardDate ? `Daily Three · ${displayDate(activeBoardDate)}` : "Pilot Puzzle"}</p>
-        <h1>Find a path.</h1>
-        <p className="lede">The model begins by answering the question. Your choices bend what becomes likely next.</p>
         <div className="steer-brief">
           <div><span>QUESTION</span><strong>{puzzle.question}</strong></div>
           <div><span>TARGET TOKEN</span><strong>{puzzle.target}</strong></div>
         </div>
         <div className="local-warning">
-          <strong>FIRST LOAD: ABOUT 570 MB</strong>
-          <span>The same local model used by the original game. Your browser should already have it cached if you played that round.</span>
+          <p>The first game takes a moment to load the model. Later games should start faster on this device.</p>
         </div>
         <div className="result-actions">
           <button className="primary-button" onClick={begin}>LOAD THE MODEL</button>
