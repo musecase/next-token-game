@@ -22,7 +22,6 @@ export default function AboutPage() {
         </header>
 
         <section className="explainer-card">
-          <span className="explainer-number">01</span>
           <div>
             <h2>Tokens are pieces of text.</h2>
             <p>A token can be a word, part of a word, punctuation, or a space. Models read and write tokens rather than complete answers.</p>
@@ -33,7 +32,6 @@ export default function AboutPage() {
         </section>
 
         <section className="explainer-card">
-          <span className="explainer-number">02</span>
           <div>
             <h2>The model predicts, then repeats.</h2>
             <p>At each step, it scores possible next tokens. Pick one and it recalculates from there. In the game, likely choices appear larger and brighter.</p>
@@ -41,7 +39,6 @@ export default function AboutPage() {
         </section>
 
         <section className="explainer-card">
-          <span className="explainer-number">03</span>
           <div>
             <h2>Generation is not retrieval.</h2>
             <p>The model usually builds a response from learned patterns rather than retrieving a finished answer. A fluent path can lead to a fact—or plausible nonsense.</p>
