@@ -120,7 +120,7 @@ export default function ArcadeLeaderboard({ date, puzzleId, score }: Props) {
             <li key={`${entry.name}-${index}`}><span>{index + 1}</span><strong>{entry.name}</strong><em>{entry.score}</em></li>
           ))}
         </ol>
-      ) : <p className="arcade-empty">The cabinet is waiting for its first initials.</p>}
+      ) : <p className="arcade-empty">No scores yet.</p>}
 
       {qualifies && !submitted ? (
         <form className="arcade-name-form" onSubmit={submitScore}>
