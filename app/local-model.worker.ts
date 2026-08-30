@@ -188,8 +188,8 @@ async function loadAndPrefill(
     send({
       type: "status",
       label: modelDtype === "q4f16"
-        ? "Downloading the 570 MB model…"
-        : "Downloading a compatible local model…",
+        ? "Loading the model…"
+        : "Loading the compatible model…",
     });
     const loadStarted = performance.now();
     model = await AutoModelForCausalLM.from_pretrained(MODEL_ID, {
