@@ -577,11 +577,6 @@ export default function TokenGame() {
           <span className="brand-mark">T</span>
           <span>TOKEN TUMBLE</span>
         </button>
-        <div className="topbar-tools">
-          <div className="prototype-badge">
-            <span className="status-dot" /> {mode === "steer" ? "daily_steer: live" : "model_status: playable"}
-          </div>
-        </div>
       </header>
 
       <section className="game-stage" id="top">
